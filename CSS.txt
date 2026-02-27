@@ -1,0 +1,12 @@
+/* تجعل النص فوق الكانفاس قابلاً للتحديد */
+.textLayer {
+    opacity: 0.2; /* يمكنك جعلها 0 لتختفي تماماً ويبقى التحديد فقط */
+    mix-blend-mode: multiply;
+}
+.textLayer > span {
+    color: transparent;
+    position: absolute;
+    white-space: pre;
+    cursor: text;
+    transform-origin: 0% 0%;
+}
