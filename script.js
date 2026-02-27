@@ -26,7 +26,7 @@ async function go(file){
       msgs=[{role:'user',content:buildPrompt(t)}];
     }
     setStep('تحليل ثنائي اللغة · Bilingual analysis...');
-    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:5500,messages:msgs})});
+    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':'YOUR_API_KEY_HERE','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:5500,messages:msgs})});
     if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'API Error')}
     setStep('معالجة النتائج · Processing...');
     const data=await res.json();
