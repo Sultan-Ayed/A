@@ -429,7 +429,7 @@
   }
   .del-note:hover { opacity: 1; color: var(--accent); }
 
-  @media (max-width: 768px) {
+  .tb-btn.active-mode { background: var(--accent2); color: white; border-color: var(--accent2); }
     #sidebar { width: 100%; max-width: 100%; height: 40vh; }
     #app-layout.visible { flex-direction: column-reverse; }
   }
@@ -537,6 +537,10 @@
         <button class="tb-btn" onclick="toggleAllPages()" id="btn-allpages">كل الصفحات</button>
       </div>
       <div class="toolbar-sep"></div>
+      <div class="toolbar-group">
+        <button class="tb-btn active-mode" onclick="toggleRenderMode()" id="btn-rendermode" title="التبديل بين وضع الصورة ووضع النص">🖼 وضع الصورة</button>
+      </div>
+      <div class="toolbar-sep"></div>
       <div id="pdf-title-bar">—</div>
     </div>
     <div id="pdf-viewport"></div>
@@ -562,6 +566,7 @@
   let showAllPages = false;
   let savedNotes = [];
   let darkMode = false;
+  let renderMode = 'image'; // 'image' = sharp canvas render, 'text' = native text layer
 
   // Drag & Drop
   const dropZone = document.getElementById('drop-zone');
@@ -598,21 +603,31 @@
     }
   }
 
+  async function renderPageToWrapper(num, wrapper) {
+    const page = await pdfDoc.getPage(num);
+    const dpr = renderMode === 'image' ? (window.devicePixelRatio || 2) : 1;
+    const vp = page.getViewport({ scale: scale * dpr });
+    const canvas = document.createElement('canvas');
+    canvas.width = vp.width;
+    canvas.height = vp.height;
+    // Display at logical size
+    canvas.style.width = (vp.width / dpr) + 'px';
+    canvas.style.height = (vp.height / dpr) + 'px';
+    const ctx = canvas.getContext('2d');
+    wrapper.appendChild(canvas);
+    const renderContext = { canvasContext: ctx, viewport: vp };
+    await page.render(renderContext).promise;
+  }
+
   async function renderPage(num) {
     if (!pdfDoc) return;
     showLoading('جاري عرض الصفحة ' + num + '...');
     const viewport_el = document.getElementById('pdf-viewport');
     viewport_el.innerHTML = '';
-    const page = await pdfDoc.getPage(num);
-    const vp = page.getViewport({ scale });
-    const canvas = document.createElement('canvas');
-    canvas.width = vp.width;
-    canvas.height = vp.height;
     const wrapper = document.createElement('div');
     wrapper.className = 'pdf-page-wrapper';
-    wrapper.appendChild(canvas);
     viewport_el.appendChild(wrapper);
-    await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+    await renderPageToWrapper(num, wrapper);
     updatePageInfo();
     hideLoading();
   }
@@ -625,18 +640,26 @@
     for (let i = 1; i <= totalPages; i++) {
       setProgress((i / totalPages) * 100);
       document.getElementById('loading-text').textContent = `تحميل الصفحة ${i} من ${totalPages}...`;
-      const page = await pdfDoc.getPage(i);
-      const vp = page.getViewport({ scale });
-      const canvas = document.createElement('canvas');
-      canvas.width = vp.width; canvas.height = vp.height;
       const wrapper = document.createElement('div');
       wrapper.className = 'pdf-page-wrapper';
       wrapper.dataset.page = i;
-      wrapper.appendChild(canvas);
       viewport_el.appendChild(wrapper);
-      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+      await renderPageToWrapper(i, wrapper);
     }
     hideLoading();
+  }
+
+  function toggleRenderMode() {
+    renderMode = renderMode === 'image' ? 'text' : 'image';
+    const btn = document.getElementById('btn-rendermode');
+    if (renderMode === 'image') {
+      btn.textContent = '🖼 وضع الصورة';
+      btn.classList.add('active-mode');
+    } else {
+      btn.textContent = '📝 وضع النص';
+      btn.classList.remove('active-mode');
+    }
+    if (showAllPages) renderAllPages(); else renderPage(currentPage);
   }
 
   function toggleAllPages() {
