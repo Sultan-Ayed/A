@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scholaris — قارئ الأوراق العلمية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+  :root {
+    --ink: #1a1612;
+    --paper: #f5f0e8;
+    --aged: #e8dfc8;
+    --accent: #8b2e0a;
+    --accent2: #2a4a6b;
+    --muted: #7a6f5e;
+    --highlight: #f0c040;
+    --note-bg: #fffde7;
+    --border: #c8bba0;
+    --shadow: rgba(26,22,18,0.15);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 12px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    color: var(--paper);
+  }
+  .logo span { color: var(--highlight); }
+  .header-sub {
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .btn-icon {
+    background: transparent;
+    border: 1px solid #444;
+    color: var(--paper);
+    padding: 6px 14px;
+    cursor: pointer;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.8rem;
+    border-radius: 2px;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+  .btn-icon:hover { background: var(--accent); border-color: var(--accent); }
+  .btn-icon.active { background: var(--accent2); border-color: var(--accent2); }
+
+  /* ── DROP ZONE ── */
+  #drop-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 60px);
+    text-align: center;
+    padding: 40px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  #drop-zone.drag-over { background: var(--aged); }
+  .drop-frame {
+    border: 2px dashed var(--border);
+    padding: 60px 80px;
+    max-width: 600px;
+    position: relative;
+    background: rgba(255,255,255,0.4);
+  }
+  .drop-frame::before, .drop-frame::after {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: var(--accent);
+    border-style: solid;
+  }
+  .drop-frame::before { top: -2px; right: -2px; border-width: 2px 2px 0 0; }
+  .drop-frame::after { bottom: -2px; left: -2px; border-width: 0 0 2px 2px; }
+  .drop-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .drop-title {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    font-weight: 300;
+  }
+  .drop-sub { color: var(--muted); font-size: 0.9rem; line-height: 1.8; }
+  .drop-btn {
+    margin-top: 24px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border-radius: 2px;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .drop-btn:hover { background: #a03510; transform: translateY(-1px); }
+  #file-input { display: none; }
+
+  /* ── MAIN LAYOUT ── */
+  #app-layout {
+    display: none;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+  }
+  #app-layout.visible { display: flex; }
+
+  /* ── PDF PANEL ── */
+  #pdf-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-left: 1px solid var(--border);
+  }
+  #pdf-toolbar {
+    background: var(--aged);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .toolbar-group { display: flex; align-items: center; gap: 6px; }
+  .toolbar-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+  .tb-btn {
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    border-radius: 2px;
+    transition: all 0.15s;
+    font-family: 'Tajawal', sans-serif;
+  }
+  .tb-btn:hover { background: var(--ink); color: white; }
+  #page-info { font-size: 0.8rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+  #zoom-level { font-size: 0.75rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace; min-width: 40px; }
+  #pdf-title-bar {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-style: italic;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #pdf-viewport {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding: 24px;
+    background: #7a7060;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .pdf-page-wrapper {
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .pdf-page-wrapper canvas { display: block; }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: 340px;
+    min-width: 280px;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    background: #faf7f0;
+    border-right: 1px solid var(--border);
+    overflow: hidden;
+    resize: horizontal;
+  }
+  #sidebar-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--border);
+    background: var(--aged);
+  }
+  .s-tab {
+    flex: 1;
+    padding: 10px 6px;
+    text-align: center;
+    font-size: 0.78rem;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-family: 'Tajawal', sans-serif;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+  }
+  .s-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
+  .s-tab:hover:not(.active) { background: rgba(0,0,0,0.04); }
+  .sidebar-panel { display: none; flex: 1; overflow-y: auto; padding: 16px; }
+  .sidebar-panel.active { display: block; }
+
+  /* Notes */
+  #notes-area {
+    width: 100%;
+    min-height: 200px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 10px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    background: var(--note-bg);
+    resize: vertical;
+    color: var(--ink);
+    outline: none;
+  }
+  #notes-area:focus { border-color: var(--accent2); }
+  .notes-actions { margin-top: 8px; display: flex; gap: 8px; }
+  .notes-btn {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border-radius: 2px;
+    font-family: 'Tajawal', sans-serif;
+    transition: all 0.15s;
+  }
+  .notes-btn.primary { background: var(--accent2); color: white; border: none; }
+  .notes-btn.primary:hover { background: #1e3a55; }
+  .notes-btn.secondary { background: white; color: var(--ink); border: 1px solid var(--border); }
+  .notes-btn.secondary:hover { background: var(--aged); }
+
+  /* Info / Metadata */
+  .meta-item { margin-bottom: 14px; }
+  .meta-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .meta-value { font-size: 0.88rem; line-height: 1.6; }
+  .section-title {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    margin-bottom: 14px;
+  }
+
+  /* Glossary */
+  #search-term {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.88rem;
+    background: white;
+    outline: none;
+    margin-bottom: 10px;
+  }
+  #search-term:focus { border-color: var(--accent); }
+  .search-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .search-link {
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    border-radius: 2px;
+    text-decoration: none;
+    font-family: 'Tajawal', sans-serif;
+    transition: all 0.15s;
+  }
+  .sl-scholar { background: #e8f0fe; color: #1a73e8; }
+  .sl-scholar:hover { background: #1a73e8; color: white; }
+  .sl-wiki { background: #f0f0f0; color: #333; }
+  .sl-wiki:hover { background: #333; color: white; }
+  .sl-semantic { background: #e8f5e9; color: #2e7d32; }
+  .sl-semantic:hover { background: #2e7d32; color: white; }
+
+  /* TOC */
+  .toc-item {
+    padding: 6px 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.15s;
+    border-right: 3px solid transparent;
+  }
+  .toc-item:hover { background: var(--aged); border-right-color: var(--accent); }
+  .toc-level-1 { font-weight: 500; }
+  .toc-level-2 { padding-right: 20px; color: var(--muted); font-size: 0.8rem; }
+
+  /* Dark mode */
+  body.dark {
+    --ink: #e8e0d0;
+    --paper: #1a1712;
+    --aged: #242018;
+    --muted: #8a8070;
+    --border: #3a3028;
+    --note-bg: #1e1c14;
+  }
+  body.dark header { background: #0e0c0a; }
+  body.dark #pdf-toolbar { background: #1e1c14; }
+  body.dark #sidebar { background: #1a1712; }
+  body.dark #sidebar-tabs { background: #141210; }
+  body.dark #notes-area { background: #1e1c14; color: #e0d8c0; }
+  body.dark .tb-btn { background: #2a2620; color: #e0d8c0; border-color: #3a3028; }
+  body.dark .tb-btn:hover { background: var(--accent); color: white; }
+  body.dark #search-term { background: #2a2620; color: #e0d8c0; border-color: #3a3028; }
+
+  /* Loading */
+  #loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,22,18,0.85);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    color: var(--paper);
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.2rem;
+  }
+  #loading-overlay.visible { display: flex; }
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid #444;
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Progress bar */
+  #load-progress {
+    width: 200px; height: 3px;
+    background: #333;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  #load-progress-bar {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.3s;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  /* Saved notes list */
+  .saved-note {
+    background: var(--note-bg);
+    border: 1px solid var(--border);
+    border-right: 3px solid var(--accent);
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    border-radius: 2px;
+    position: relative;
+  }
+  .saved-note .note-page { font-size: 0.7rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace; margin-bottom: 4px; }
+  .del-note {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.7rem;
+    opacity: 0.6;
+  }
+  .del-note:hover { opacity: 1; color: var(--accent); }
+
+  @media (max-width: 768px) {
+    #sidebar { width: 100%; max-width: 100%; height: 40vh; }
+    #app-layout.visible { flex-direction: column-reverse; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div>
+    <div class="logo">Schol<span>a</span>ris</div>
+    <div class="header-sub">القارئ الأكاديمي للأوراق العلمية</div>
+  </div>
+  <div class="header-actions">
+    <button class="btn-icon" id="btn-dark" onclick="toggleDark()">🌙 ليلي</button>
+    <button class="btn-icon" id="btn-new" onclick="loadNew()" style="display:none">📂 ورقة جديدة</button>
+  </div>
+</header>
+
+<!-- DROP ZONE -->
+<div id="drop-zone" onclick="document.getElementById('file-input').click()">
+  <div class="drop-frame">
+    <div class="drop-icon">📄</div>
+    <div class="drop-title">أسقط ورقتك العلمية هنا</div>
+    <div class="drop-sub">
+      يدعم ملفات PDF<br>
+      جميع الملفات تُعالَج محلياً في متصفحك — لا تُرسَل لأي خادم
+    </div>
+    <button class="drop-btn">اختر ملف PDF</button>
+  </div>
+  <input type="file" id="file-input" accept=".pdf" onchange="handleFile(this.files[0])">
+</div>
+
+<!-- APP LAYOUT -->
+<div id="app-layout">
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div id="sidebar-tabs">
+      <button class="s-tab active" onclick="showTab('notes')">📝 ملاحظات</button>
+      <button class="s-tab" onclick="showTab('info')">ℹ️ معلومات</button>
+      <button class="s-tab" onclick="showTab('glossary')">🔍 بحث</button>
+      <button class="s-tab" onclick="showTab('toc')">📑 فهرس</button>
+    </div>
+
+    <!-- Notes -->
+    <div id="panel-notes" class="sidebar-panel active">
+      <div class="section-title">ملاحظاتي</div>
+      <textarea id="notes-area" placeholder="اكتب ملاحظاتك هنا... يمكنك الإشارة لرقم الصفحة"></textarea>
+      <div class="notes-actions">
+        <button class="notes-btn primary" onclick="saveNote()">💾 حفظ الملاحظة</button>
+        <button class="notes-btn secondary" onclick="exportNotes()">⬇️ تصدير</button>
+      </div>
+      <div id="saved-notes" style="margin-top:16px"></div>
+    </div>
+
+    <!-- Info -->
+    <div id="panel-info" class="sidebar-panel">
+      <div class="section-title">معلومات الورقة</div>
+      <div id="meta-container">
+        <div class="meta-item">
+          <div class="meta-label">الحالة</div>
+          <div class="meta-value">الرجاء تحميل ملف PDF</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Glossary/Search -->
+    <div id="panel-glossary" class="sidebar-panel">
+      <div class="section-title">البحث في المصطلحات</div>
+      <input type="text" id="search-term" placeholder="اكتب مصطلحاً علمياً...">
+      <div class="search-links">
+        <a id="link-scholar" href="#" target="_blank" class="search-link sl-scholar">Google Scholar</a>
+        <a id="link-wiki" href="#" target="_blank" class="search-link sl-wiki">Wikipedia</a>
+        <a id="link-semantic" href="#" target="_blank" class="search-link sl-semantic">Semantic Scholar</a>
+      </div>
+      <div style="margin-top:16px; font-size:0.8rem; color:var(--muted); line-height:1.8">
+        اكتب المصطلح ثم انقر على الرابط المناسب للبحث عنه في قاعدة البيانات الأكاديمية.
+      </div>
+    </div>
+
+    <!-- TOC -->
+    <div id="panel-toc" class="sidebar-panel">
+      <div class="section-title">فهرس الصفحات</div>
+      <div id="toc-container"></div>
+    </div>
+  </div>
+
+  <!-- PDF PANEL -->
+  <div id="pdf-panel">
+    <div id="pdf-toolbar">
+      <div class="toolbar-group">
+        <button class="tb-btn" onclick="prevPage()">◀ السابقة</button>
+        <button class="tb-btn" onclick="nextPage()">التالية ▶</button>
+        <span id="page-info">1 / 1</span>
+      </div>
+      <div class="toolbar-sep"></div>
+      <div class="toolbar-group">
+        <button class="tb-btn" onclick="zoomOut()">－</button>
+        <span id="zoom-level">100%</span>
+        <button class="tb-btn" onclick="zoomIn()">＋</button>
+        <button class="tb-btn" onclick="fitWidth()">عرض</button>
+      </div>
+      <div class="toolbar-sep"></div>
+      <div class="toolbar-group">
+        <button class="tb-btn" onclick="toggleAllPages()" id="btn-allpages">كل الصفحات</button>
+      </div>
+      <div class="toolbar-sep"></div>
+      <div id="pdf-title-bar">—</div>
+    </div>
+    <div id="pdf-viewport"></div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <div id="loading-text">جاري تحميل الورقة...</div>
+  <div id="load-progress"><div id="load-progress-bar"></div></div>
+</div>
+
+<script>
+  // Setup PDF.js worker
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  let pdfDoc = null;
+  let currentPage = 1;
+  let totalPages = 0;
+  let scale = 1.4;
+  let fileName = '';
+  let showAllPages = false;
+  let savedNotes = [];
+  let darkMode = false;
+
+  // Drag & Drop
+  const dropZone = document.getElementById('drop-zone');
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+
+  function handleFile(file) {
+    if (!file || file.type !== 'application/pdf') return alert('الرجاء اختيار ملف PDF صالح');
+    fileName = file.name;
+    showLoading('جاري تحميل الورقة...');
+    const reader = new FileReader();
+    reader.onload = e => loadPDF(e.target.result);
+    reader.readAsArrayBuffer(file);
+  }
+
+  async function loadPDF(data) {
+    try {
+      pdfDoc = await pdfjsLib.getDocument({ data }).promise;
+      totalPages = pdfDoc.numPages;
+      currentPage = 1;
+      hideLoading();
+      showApp();
+      await renderPage(currentPage);
+      buildTOC();
+      loadMeta();
+    } catch (err) {
+      hideLoading();
+      alert('خطأ في قراءة الملف: ' + err.message);
+    }
+  }
+
+  async function renderPage(num) {
+    if (!pdfDoc) return;
+    showLoading('جاري عرض الصفحة ' + num + '...');
+    const viewport_el = document.getElementById('pdf-viewport');
+    viewport_el.innerHTML = '';
+    const page = await pdfDoc.getPage(num);
+    const vp = page.getViewport({ scale });
+    const canvas = document.createElement('canvas');
+    canvas.width = vp.width;
+    canvas.height = vp.height;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'pdf-page-wrapper';
+    wrapper.appendChild(canvas);
+    viewport_el.appendChild(wrapper);
+    await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+    updatePageInfo();
+    hideLoading();
+  }
+
+  async function renderAllPages() {
+    if (!pdfDoc) return;
+    showLoading('جاري تحميل كل الصفحات...');
+    const viewport_el = document.getElementById('pdf-viewport');
+    viewport_el.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+      setProgress((i / totalPages) * 100);
+      document.getElementById('loading-text').textContent = `تحميل الصفحة ${i} من ${totalPages}...`;
+      const page = await pdfDoc.getPage(i);
+      const vp = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      canvas.width = vp.width; canvas.height = vp.height;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'pdf-page-wrapper';
+      wrapper.dataset.page = i;
+      wrapper.appendChild(canvas);
+      viewport_el.appendChild(wrapper);
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+    }
+    hideLoading();
+  }
+
+  function toggleAllPages() {
+    showAllPages = !showAllPages;
+    document.getElementById('btn-allpages').textContent = showAllPages ? 'صفحة واحدة' : 'كل الصفحات';
+    if (showAllPages) renderAllPages(); else renderPage(currentPage);
+  }
+
+  function prevPage() { if (currentPage > 1) { currentPage--; if (!showAllPages) renderPage(currentPage); else scrollToPage(currentPage); } }
+  function nextPage() { if (currentPage < totalPages) { currentPage++; if (!showAllPages) renderPage(currentPage); else scrollToPage(currentPage); } }
+
+  function scrollToPage(num) {
+    const el = document.querySelector(`[data-page="${num}"]`);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function zoomIn() { scale = Math.min(scale + 0.2, 3.0); refreshZoom(); }
+  function zoomOut() { scale = Math.max(scale - 0.2, 0.5); refreshZoom(); }
+  function fitWidth() {
+    const pdfPanel = document.getElementById('pdf-panel');
+    if (pdfDoc) {
+      pdfDoc.getPage(1).then(page => {
+        const vp = page.getViewport({ scale: 1 });
+        scale = (pdfPanel.offsetWidth - 60) / vp.width;
+        refreshZoom();
+      });
+    }
+  }
+  function refreshZoom() {
+    document.getElementById('zoom-level').textContent = Math.round(scale * 100) + '%';
+    if (showAllPages) renderAllPages(); else renderPage(currentPage);
+  }
+
+  function updatePageInfo() {
+    document.getElementById('page-info').textContent = `${currentPage} / ${totalPages}`;
+    document.getElementById('pdf-title-bar').textContent = fileName;
+  }
+
+  function showApp() {
+    document.getElementById('drop-zone').style.display = 'none';
+    document.getElementById('app-layout').classList.add('visible');
+    document.getElementById('btn-new').style.display = 'inline-block';
+  }
+
+  function loadNew() {
+    document.getElementById('drop-zone').style.display = 'flex';
+    document.getElementById('app-layout').classList.remove('visible');
+    document.getElementById('btn-new').style.display = 'none';
+    pdfDoc = null;
+  }
+
+  function buildTOC() {
+    const toc = document.getElementById('toc-container');
+    toc.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+      const item = document.createElement('div');
+      item.className = 'toc-item toc-level-1';
+      item.textContent = `صفحة ${i}`;
+      item.onclick = () => { currentPage = i; if (showAllPages) scrollToPage(i); else renderPage(i); };
+      toc.appendChild(item);
+    }
+  }
+
+  async function loadMeta() {
+    const meta = await pdfDoc.getMetadata().catch(() => ({}));
+    const info = meta.info || {};
+    const container = document.getElementById('meta-container');
+    const fields = [
+      { label: 'العنوان', val: info.Title || fileName },
+      { label: 'المؤلف', val: info.Author || '—' },
+      { label: 'المنشئ', val: info.Creator || '—' },
+      { label: 'تاريخ الإنشاء', val: info.CreationDate ? formatPDFDate(info.CreationDate) : '—' },
+      { label: 'عدد الصفحات', val: totalPages },
+      { label: 'اسم الملف', val: fileName },
+    ];
+    container.innerHTML = fields.map(f => `
+      <div class="meta-item">
+        <div class="meta-label">${f.label}</div>
+        <div class="meta-value">${f.val}</div>
+      </div>`).join('');
+  }
+
+  function formatPDFDate(str) {
+    try {
+      if (str.startsWith('D:')) str = str.slice(2);
+      return str.slice(0, 4) + '-' + str.slice(4, 6) + '-' + str.slice(6, 8);
+    } catch { return str; }
+  }
+
+  // Tabs
+  function showTab(name) {
+    document.querySelectorAll('.sidebar-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.s-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // Notes
+  function saveNote() {
+    const text = document.getElementById('notes-area').value.trim();
+    if (!text) return;
+    savedNotes.push({ text, page: currentPage, time: new Date().toLocaleTimeString('ar') });
+    document.getElementById('notes-area').value = '';
+    renderNotes();
+  }
+
+  function renderNotes() {
+    const container = document.getElementById('saved-notes');
+    container.innerHTML = savedNotes.map((n, i) => `
+      <div class="saved-note">
+        <div class="note-page">صفحة ${n.page} — ${n.time}</div>
+        ${escHtml(n.text)}
+        <button class="del-note" onclick="deleteNote(${i})">✕</button>
+      </div>`).join('');
+  }
+
+  function deleteNote(i) { savedNotes.splice(i, 1); renderNotes(); }
+
+  function exportNotes() {
+    if (!savedNotes.length) return alert('لا توجد ملاحظات محفوظة');
+    const content = `ملاحظات قراءة: ${fileName}\n${'='.repeat(50)}\n\n` +
+      savedNotes.map(n => `[صفحة ${n.page}]\n${n.text}\n`).join('\n---\n\n');
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'ملاحظات_' + fileName.replace('.pdf', '') + '.txt';
+    a.click();
+  }
+
+  // Glossary search
+  document.getElementById('search-term').addEventListener('input', function() {
+    const q = encodeURIComponent(this.value.trim());
+    document.getElementById('link-scholar').href = `https://scholar.google.com/scholar?q=${q}`;
+    document.getElementById('link-wiki').href = `https://en.wikipedia.org/wiki/Special:Search?search=${q}`;
+    document.getElementById('link-semantic').href = `https://www.semanticscholar.org/search?q=${q}`;
+  });
+
+  // Dark mode
+  function toggleDark() {
+    darkMode = !darkMode;
+    document.body.classList.toggle('dark', darkMode);
+    document.getElementById('btn-dark').textContent = darkMode ? '☀️ نهاري' : '🌙 ليلي';
+  }
+
+  function showLoading(msg) {
+    document.getElementById('loading-text').textContent = msg || 'جاري التحميل...';
+    document.getElementById('loading-overlay').classList.add('visible');
+    setProgress(0);
+  }
+  function hideLoading() { document.getElementById('loading-overlay').classList.remove('visible'); }
+  function setProgress(pct) { document.getElementById('load-progress-bar').style.width = pct + '%'; }
+
+  function escHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+</script>
+</body>
+</html>
