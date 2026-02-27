@@ -16,7 +16,15 @@
         /* منطقة العمل الرئيسية */
         main { display: flex; flex: 1; overflow: hidden; }
         #pdf-container { flex: 2; overflow-y: auto; background: #525659; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        #sidebar { flex: 0.8; background: white; border-right: 2px solid #ddd; padding: 20px; overflow-y: auto; }
+        #sidebar {
+            <div id="quick-analysis" style="background: #eef2f7; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none;">
+    <h4 style="margin-top:0;">⚡ تحليل سريع (AI)</h4>
+    <div id="ai-status">جاري التحليل...</div>
+    <ul id="analysis-results" style="font-size: 0.9em; padding-right: 20px;">
+        </ul>
+</div>
+            
+            flex: 0.8; background: white; border-right: 2px solid #ddd; padding: 20px; overflow-y: auto; }
         
         canvas { box-shadow: 0 0 10px rgba(0,0,0,0.5); margin-bottom: 20px; max-width: 100%; }
         textarea { width: 100%; height: 200px; margin-top: 10px; resize: vertical; }
