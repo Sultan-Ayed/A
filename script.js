@@ -1,59 +1,81 @@
-// دالة لاستخراج النص من أول صفحة فور التحميل
-async function autoAnalyze(pdf) {
-    const statusDiv = document.getElementById('quick-analysis');
-    const resultsUl = document.getElementById('analysis-results');
-    const statusText = document.getElementById('ai-status');
-    
-    statusDiv.style.display = 'block';
-    resultsUl.innerHTML = '';
-    statusText.innerText = "جاري قراءة الورقة...";
+const pdfContainer = document.getElementById('pdf-container');
+const pdfjsLib = window['pdfjs-dist/build/pdf'];
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+// 1. معالجة الرفع
+document.getElementById('file-upload').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const typedarray = new Uint8Array(this.result);
+            processPDF(typedarray);
+        };
+        reader.readAsArrayBuffer(file);
+    }
+});
+
+// 2. التحميل من رابط
+async function loadFromURL() {
+    const url = document.getElementById('url-input').value;
+    if (url) processPDF(url);
+}
+
+// 3. معالجة وعرض الـ PDF + التحليل
+async function processPDF(source) {
+    pdfContainer.innerHTML = ''; 
+    document.getElementById('analysis-results').innerHTML = '';
+    document.getElementById('ai-status').innerText = "جاري تحليل البيانات...";
 
     try {
-        const page = await pdf.getPage(1); // نركز على الصفحة الأولى (العنوان والملخص)
-        const textContent = await page.getTextContent();
-        const fullText = textContent.items.map(item => item.str).join(' ');
+        const loadingTask = pdfjsLib.getDocument(source);
+        const pdf = await loadingTask.promise;
 
-        // هنا نقوم بمحاكاة تحليل البيانات (أو إرسالها لـ Gemini API)
-        // سأضع لك منطقاً يستخرج "العناوين" المقترحة برمجياً حتى تربط الـ API
-        
-        const summaryPoints = [
-            "📑 فحص كلي: الورقة تبدو دراسة مرجعية (Review Paper).",
-            "🎯 الهدف: تحليل تقنيات التهرب في برمجيات الفدية.",
-            "💡 المنهجية: تحليل مقارن لآليات الدفاع الحديثة.",
-            "🔍 كلمات مفتاحية: Ransomware, Evasion, Cybersecurity."
-        ];
+        // تشغيل التحليل التلقائي (أول صفحة)
+        performQuickAnalysis(pdf);
 
-        statusText.style.display = 'none';
-        summaryPoints.forEach(point => {
-            const li = document.createElement('li');
-            li.innerText = point;
-            li.style.marginBottom = "8px";
-            resultsUl.appendChild(li);
-        });
-
+        // رسم كل الصفحات للقراءة
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+            const page = await pdf.getPage(pageNum);
+            const viewport = page.getViewport({ scale: 1.5 });
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            await page.render({ canvasContext: context, viewport: viewport }).promise;
+            pdfContainer.appendChild(canvas);
+        }
     } catch (error) {
-        statusText.innerText = "فشل التحليل التلقائي.";
+        alert("خطأ في تحميل الملف: " + error.message);
     }
 }
 
-// تعديل دالة renderPDF لتستدعي التحليل التلقائي
-async function renderPDF(source) {
-    pdfContainer.innerHTML = ''; 
-    const loadingTask = pdfjsLib.getDocument(source);
-    const pdf = await loadingTask.promise;
-    
-    // استدعاء التحليل السريع بمجرد تحميل الملف
-    autoAnalyze(pdf);
+// 4. وظيفة "الباحث الذكي" - استخراج المعلومات فوراً
+async function performQuickAnalysis(pdf) {
+    const resultsUl = document.getElementById('analysis-results');
+    const statusText = document.getElementById('ai-status');
 
-    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-        // ... (نفس كود الرسم السابق الذي أرسلته لك)
-        const page = await pdf.getPage(pageNum);
-        const viewport = page.getViewport({ scale: 1.5 });
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        await page.render({ canvasContext: context, viewport: viewport }).promise;
-        pdfContainer.appendChild(canvas);
+    try {
+        const page = await pdf.getPage(1);
+        const textContent = await page.getTextContent();
+        const text = textContent.items.map(i => i.str).join(' ');
+
+        // محاكاة استخراج البيانات (يمكن ربطها بـ Gemini API هنا)
+        const insights = [
+            "📌 نوع الورقة: دراسة بحثية تخصصية.",
+            `📄 عدد الصفحات: ${pdf.numPages} صفحة.`,
+            "🔍 التركيز الأساسي: " + (text.substring(0, 80) + "..."),
+            "⏱️ وقت القراءة المتوقع: " + Math.ceil(pdf.numPages * 2.5) + " دقيقة."
+        ];
+
+        statusText.style.display = 'none';
+        insights.forEach(item => {
+            const li = document.createElement('li');
+            li.innerText = item;
+            li.style.marginBottom = "10px";
+            resultsUl.appendChild(li);
+        });
+    } catch (e) {
+        statusText.innerText = "تعذر استخراج البيانات التلقائية.";
     }
 }
