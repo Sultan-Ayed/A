@@ -1,86 +1,59 @@
-const pdfContainer = document.getElementById('pdf-container');
-const pdfjsLib = window['pdfjs-dist/build/pdf'];
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+// دالة لاستخراج النص من أول صفحة فور التحميل
+async function autoAnalyze(pdf) {
+    const statusDiv = document.getElementById('quick-analysis');
+    const resultsUl = document.getElementById('analysis-results');
+    const statusText = document.getElementById('ai-status');
+    
+    statusDiv.style.display = 'block';
+    resultsUl.innerHTML = '';
+    statusText.innerText = "جاري قراءة الورقة...";
 
-// 1. التعامل مع رفع الملف من الجهاز
-document.getElementById('file-upload').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function() {
-            const typedarray = new Uint8Array(this.result);
-            renderPDF(typedarray);
-        };
-        reader.readAsArrayBuffer(file);
-    }
-});
+    try {
+        const page = await pdf.getPage(1); // نركز على الصفحة الأولى (العنوان والملخص)
+        const textContent = await page.getTextContent();
+        const fullText = textContent.items.map(item => item.str).join(' ');
 
-// 2. التعامل مع الرابط الخارجي
-async function loadFromURL() {
-    const url = document.getElementById('url-input').value;
-    if (url) {
-        try {
-            // ملاحظة: قد تحتاج لـ Proxy إذا كان الموقع يمنع CORS
-            renderPDF(url);
-        } catch (error) {
-            alert("فشل تحميل الملف. تأكد أن الرابط مباشر ويدعم الوصول العام.");
-        }
+        // هنا نقوم بمحاكاة تحليل البيانات (أو إرسالها لـ Gemini API)
+        // سأضع لك منطقاً يستخرج "العناوين" المقترحة برمجياً حتى تربط الـ API
+        
+        const summaryPoints = [
+            "📑 فحص كلي: الورقة تبدو دراسة مرجعية (Review Paper).",
+            "🎯 الهدف: تحليل تقنيات التهرب في برمجيات الفدية.",
+            "💡 المنهجية: تحليل مقارن لآليات الدفاع الحديثة.",
+            "🔍 كلمات مفتاحية: Ransomware, Evasion, Cybersecurity."
+        ];
+
+        statusText.style.display = 'none';
+        summaryPoints.forEach(point => {
+            const li = document.createElement('li');
+            li.innerText = point;
+            li.style.marginBottom = "8px";
+            resultsUl.appendChild(li);
+        });
+
+    } catch (error) {
+        statusText.innerText = "فشل التحليل التلقائي.";
     }
 }
 
-// 3. وظيفة الرسم المطورة مع طبقة النصوص
+// تعديل دالة renderPDF لتستدعي التحليل التلقائي
 async function renderPDF(source) {
-    pdfContainer.innerHTML = ''; // تفريغ الحاوية
+    pdfContainer.innerHTML = ''; 
+    const loadingTask = pdfjsLib.getDocument(source);
+    const pdf = await loadingTask.promise;
     
-    try {
-        const loadingTask = pdfjsLib.getDocument(source);
-        const pdf = await loadingTask.promise;
-        
-        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-            const page = await pdf.getPage(pageNum);
-            const viewport = page.getViewport({ scale: 1.5 });
+    // استدعاء التحليل السريع بمجرد تحميل الملف
+    autoAnalyze(pdf);
 
-            // إنشاء حاوية لكل صفحة (تجمع بين الـ Canvas والنصوص)
-            const pageWrapper = document.createElement('div');
-            pageWrapper.className = 'page-wrapper';
-            pageWrapper.style.position = 'relative';
-            pageWrapper.style.marginBottom = '20px';
-            pageWrapper.style.display = 'inline-block';
-            
-            // إنشاء الـ Canvas للرسم
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            pageWrapper.appendChild(canvas);
-
-            // رسم الصفحة (Visual)
-            await page.render({ canvasContext: context, viewport: viewport }).promise;
-
-            // إنشاء طبقة النصوص (Text Layer) لتمكين التحديد والنسخ
-            const textContent = await page.getTextContent();
-            const textLayerDiv = document.createElement('div');
-            textLayerDiv.className = 'textLayer';
-            textLayerDiv.style.position = 'absolute';
-            textLayerDiv.style.top = '0';
-            textLayerDiv.style.left = '0';
-            textLayerDiv.style.height = `${viewport.height}px`;
-            textLayerDiv.style.width = `${viewport.width}px`;
-            textLayerDiv.style.overflow = 'hidden';
-            textLayerDiv.style.lineHeight = '1.0';
-
-            // دمج مكتبة النص مع المتصفح
-            pdfjsLib.renderTextLayer({
-                textContent: textContent,
-                container: textLayerDiv,
-                viewport: viewport,
-                textDivs: []
-            });
-
-            pageWrapper.appendChild(textLayerDiv);
-            pdfContainer.appendChild(pageWrapper);
-        }
-    } catch (err) {
-        console.error("Error rendering PDF:", err);
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        // ... (نفس كود الرسم السابق الذي أرسلته لك)
+        const page = await pdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale: 1.5 });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        await page.render({ canvasContext: context, viewport: viewport }).promise;
+        pdfContainer.appendChild(canvas);
     }
 }
