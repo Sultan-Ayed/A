@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>محلل الأوراق العلمية | Research Paper Analyzer</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="CSS.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">🔬</div>
+    <div>
+      <div class="logo-name">PaperLens</div>
+      <div class="logo-tag">BILINGUAL RESEARCH ANALYZER</div>
+    </div>
+  </div>
+  <div class="ai-badge">✦ Claude AI</div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="hero-pill">✦ ثنائي اللغة · Bilingual Analysis</div>
+    <h1 class="hero-title">
+      <span class="ar">محلل الأوراق العلمية</span>
+      <span class="sep">|</span>
+      <span class="en">Research Paper Analyzer</span>
+    </h1>
+    <p class="hero-sub">ارفع ورقتك البحثية واحصل على تحليل شامل بالعربي والإنجليزي معاً<br>Upload your paper for a full bilingual analysis in seconds</p>
+    <div class="bi-note">
+      <span class="dot-ar"></span> النتائج بالعربي &nbsp;·&nbsp; <span class="dot-en"></span> Results in English
+    </div>
+  </div>
+
+  <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+    <div class="drop-icon-wrap">📄</div>
+    <div class="drop-main">
+      <span class="ar">اسحب وأفلت الورقة العلمية</span>
+      <span class="sep">·</span>
+      <span class="en">Drop your research paper here</span>
+    </div>
+    <div class="drop-hint">انقر للاختيار · Click to browse</div>
+    <div class="chips">
+      <span class="chip pdf">PDF</span>
+      <span class="chip txt">TXT</span>
+      <span class="chip docx">DOCX / DOC</span>
+    </div>
+    <input type="file" id="fileInput" accept=".pdf,.txt,.doc,.docx">
+  </div>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <div class="loading-state" id="loadingState">
+    <div class="loader-ring"></div>
+    <div class="loading-msg">جارٍ تحليل الورقة · Analyzing paper...</div>
+    <div class="loading-step" id="loadingStep">قراءة الملف · Reading file...</div>
+  </div>
+
+  <div id="results">
+
+    <div class="notice">
+      <span style="font-size:16px;flex-shrink:0">⚠️</span>
+      <span>التحليل مبني على محتوى الورقة باستخدام الذكاء الاصطناعي · Analysis is AI-generated. Please verify against the original source.</span>
+    </div>
+
+    <!-- PAPER HERO -->
+    <div class="paper-hero">
+      <div class="paper-type-chip">📋 <span id="paperType">—</span></div>
+      <div class="paper-main-title" id="paperTitle">—</div>
+      <div class="meta-strip" id="metaStrip"></div>
+    </div>
+
+    <!-- AUTHORS -->
+    <div class="bicard">
+      <div class="bicard-header">
+        <div class="bicard-icon ib-gold">👥</div>
+        <div class="bicard-titles"><div class="bicard-ar">الباحثون والمؤلفون</div><div class="bicard-en">Authors & Affiliations</div></div>
+      </div>
+      <div style="padding:20px 22px"><div class="authors-grid" id="authorsGrid"></div></div>
+    </div>
+
+    <!-- ABSTRACT -->
+    <div class="bicard">
+      <div class="bicard-header">
+        <div class="bicard-icon ib-blue">📝</div>
+        <div class="bicard-titles"><div class="bicard-ar">الملخص</div><div class="bicard-en">Abstract</div></div>
+      </div>
+      <div class="bilingual-body">
+        <div class="bi-col ar"><div class="col-label"><span class="cdot"></span>العربية</div><div class="bi-text ar-t" id="absAr">—</div></div>
+        <div class="bi-col en"><div class="col-label"><span class="cdot"></span>English</div><div class="bi-text en-t" id="absEn">—</div></div>
+      </div>
+    </div>
+
+    <!-- KEYWORDS -->
+    <div class="bicard">
+      <div class="bicard-header">
+        <div class="bicard-icon ib-purple">🏷️</div>
+        <div class="bicard-titles"><div class="bicard-ar">الكلمات المفتاحية</div><div class="bicard-en">Keywords</div></div>
+      </div>
+      <div class="bilingual-body">
+        <div class="bi-col ar"><div class="col-label"><span class="cdot"></span>العربية</div><div class="kw-wrap" id="kwAr"></div></div>
+        <div class="bi-col en"><div class="col-label"><span class="cdot"></span>English</div><div class="kw-wrap" id="kwEn"></div></div>
+      </div>
+    </div>
+
+    <!-- OBJECTIVE -->
+    <div class="bicard">
+      <div class="bicard-header">
+        <div class="bicard-icon ib-orange">🎯</div>
+        <div class="bicard-titles"><div class="bicard-ar">هدف البحث والفجوة البحثية</div><div class="bicard-en">Objective & Research Gap</div></div>
+      </div>
+      <div class="bilingual-body">
+        <div class="bi-col ar"><div class="col-label"><span class="cdot"></span>العربية</div><ul class="bi-list" id="objAr"></ul></div>
+        <div class="bi-col en"><div class="col-label"><span class="cdot"></span>English</div><ul class="bi-list en-list" id="objEn"></ul></div>
+      </div>
+    </div>
+
+    <!-- METHODOLOGY -->
+    <div class="bicard">
+      <div class="bicard-header">
+        <div class="bicard-icon ib-teal">⚙️</div>
+        <div class="bicard-titles"><div class="bicard-ar">المنهجية والأساليب</div><div class="bicard-en">Methodology & Methods</div></div>
+      </div>
+      <div style="padding:18px 22px"><div id="methodSteps"></div></div>
+    </div>
+
+    <!-- FINDINGS + CONTRIBUTIONS -->
+    <div class="cards-2up">
+      <div class="bicard" style="margin-bottom:0">
+        <div class="bicard-header"><div class="bicard-icon ib-green">💡</div><div class="bicard-titles"><div class="bicard-ar">النتائج الرئيسية</div><div class="bicard-en">Main Findings</div></div></div>
+        <div style="padding:16px 20px"><div class="col-label" style="direction:rtl"><span class="cdot" style="background:var(--accent)"></span>العربية</div><ul class="bi-list" id="findAr"></ul></div>
+        <div style="padding:16px 20px;border-top:1px solid var(--border)"><div class="col-label" style="color:var(--teal)"><span class="cdot" style="background:var(--teal)"></span>English</div><ul class="bi-list en-list" id="findEn"></ul></div>
+      </div>
+      <div class="bicard" style="margin-bottom:0">
+        <div class="bicard-header"><div class="bicard-icon ib-gold">⭐</div><div class="bicard-titles"><div class="bicard-ar">الإسهامات العلمية</div><div class="bicard-en">Contributions</div></div></div>
+        <div style="padding:16px 20px"><div class="col-label" style="direction:rtl"><span class="cdot" style="background:var(--accent)"></span>العربية</div><ul class="bi-list" id="contAr"></ul></div>
+        <div style="padding:16px 20px;border-top:1px solid var(--border)"><div class="col-label" style="color:var(--teal)"><span class="cdot" style="background:var(--teal)"></span>English</div><ul class="bi-list en-list" id="contEn"></ul></div>
+      </div>
+    </div>
+
+    <!-- STRENGTHS + WEAKNESSES -->
+    <div class="cards-2up">
+      <div class="bicard" style="margin-bottom:0">
+        <div class="bicard-header"><div class="bicard-icon ib-green">💪</div><div class="bicard-titles"><div class="bicard-ar">نقاط القوة</div><div class="bicard-en">Strengths</div></div></div>
+        <div style="padding:16px 20px"><div class="col-label" style="direction:rtl"><span class="cdot" style="background:var(--accent)"></span>العربية</div><div id="strAr"></div></div>
+        <div style="padding:16px 20px;border-top:1px solid var(--border)"><div class="col-label" style="color:var(--teal)"><span class="cdot" style="background:var(--teal)"></span>English</div><div id="strEn"></div></div>
+      </div>
+      <div class="bicard" style="margin-bottom:0">
+        <div class="bicard-header"><div class="bicard-icon ib-red">⚠️</div><div class="bicard-titles"><div class="bicard-ar">القيود والمحدودية</div><div class="bicard-en">Limitations</div></div></div>
+        <div style="padding:16px 20px"><div class="col-label" style="direction:rtl"><span class="cdot" style="background:var(--accent)"></span>العربية</div><div id="limAr"></div></div>
+        <div style="padding:16px 20px;border-top:1px solid var(--border)"><div class="col-label" style="color:var(--teal)"><span class="cdot" style="background:var(--teal)"></span>English</div><div id="limEn"></div></div>
+      </div>
+    </div>
+
+    <!-- FUTURE WORK -->
+    <div class="bicard" style="margin-top:0">
+      <div class="bicard-header">
+        <div class="bicard-icon ib-blue">🔮</div>
+        <div class="bicard-titles"><div class="bicard-ar">اتجاهات البحث المستقبلية</div><div class="bicard-en">Future Research Directions</div></div>
+      </div>
+      <div class="bilingual-body">
+        <div class="bi-col ar"><div class="col-label"><span class="cdot"></span>العربية</div><ul class="bi-list" id="futAr"></ul></div>
+        <div class="bi-col en"><div class="col-label"><span class="cdot"></span>English</div><ul class="bi-list en-list" id="futEn"></ul></div>
+      </div>
+    </div>
+
+    <!-- CRITICAL QUESTIONS -->
+    <div class="bicard">
+      <div class="bicard-header">
+        <div class="bicard-icon ib-red">❓</div>
+        <div class="bicard-titles"><div class="bicard-ar">أسئلة نقدية يجب على كل باحث طرحها</div><div class="bicard-en">Critical Questions Every Researcher Should Ask</div></div>
+      </div>
+      <div style="padding:18px 22px"><div id="critQs"></div></div>
+    </div>
+
+    <!-- SCORES + CHECKLIST -->
+    <div class="cards-2up">
+      <div class="bicard" style="margin-bottom:0">
+        <div class="bicard-header"><div class="bicard-icon ib-purple">📊</div><div class="bicard-titles"><div class="bicard-ar">تقييم جودة الورقة</div><div class="bicard-en">Quality Assessment</div></div></div>
+        <div style="padding:20px 22px"><div class="scores-wrap" id="scoresWrap"></div></div>
+      </div>
+      <div class="bicard" style="margin-bottom:0">
+        <div class="bicard-header"><div class="bicard-icon ib-teal">📋</div><div class="bicard-titles"><div class="bicard-ar">قائمة التحقق للباحث</div><div class="bicard-en">Researcher Reading Checklist</div></div></div>
+        <div style="padding:20px 22px"><div id="checklist"></div></div>
+      </div>
+    </div>
+
+    <!-- CONCLUSION -->
+    <div class="bicard" style="margin-top:20px">
+      <div class="bicard-header">
+        <div class="bicard-icon ib-green">✅</div>
+        <div class="bicard-titles"><div class="bicard-ar">الخلاصة الشاملة</div><div class="bicard-en">Overall Conclusion</div></div>
+      </div>
+      <div class="bilingual-body">
+        <div class="bi-col ar"><div class="col-label"><span class="cdot"></span>العربية</div><div class="conc-text conc-ar" id="concAr">—</div></div>
+        <div class="bi-col en"><div class="col-label"><span class="cdot"></span>English</div><div class="conc-text conc-en" id="concEn">—</div></div>
+      </div>
+    </div>
+
+    <!-- CITATION -->
+    <div class="bicard">
+      <div class="bicard-header">
+        <div class="bicard-icon ib-blue">📌</div>
+        <div class="bicard-titles"><div class="bicard-ar">الاقتباس المقترح (APA)</div><div class="bicard-en">Suggested Citation (APA)</div></div>
+      </div>
+      <div style="padding:18px 22px">
+        <div class="cit-wrap">
+          <button class="copy-btn" onclick="copyCit()">نسخ · Copy</button>
+          <div class="cit-text" id="citText">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn btn-p" onclick="reset()">🔄 تحليل ورقة جديدة · New Paper</button>
+      <button class="btn btn-s" onclick="window.print()">🖨️ طباعة · Print</button>
+    </div>
+
+  </div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
