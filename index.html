@@ -449,7 +449,53 @@
         flex-wrap: wrap !important;
       }
 
-      /* العنوان يأخذ سطر كامل فوق بقية البيانات */
+      /* عنصر العنوان المخصص للطباعة */
+      .print-title-bar {
+        display: block !important;
+        background: rgba(255,255,255,0.1) !important;
+        border: 1px solid rgba(255,255,255,0.2) !important;
+        border-radius: 12px !important;
+        padding: 12px 20px !important;
+        margin: 16px auto 0 !important;
+        max-width: 700px !important;
+        text-align: center !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        color: white !important;
+        line-height: 1.6 !important;
+        word-break: break-word !important;
+      }
+
+      /* إخفاء الـ paper-meta الأصلي في الطباعة واستبداله بجدول مبسط */
+      .paper-meta { display: none !important; }
+
+      .print-meta-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 16px !important;
+        margin-top: 10px !important;
+      }
+
+      .print-meta-item {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 3px !important;
+      }
+
+      .print-meta-label {
+        font-size: 9px !important;
+        color: rgba(255,255,255,0.5) !important;
+        letter-spacing: 1.5px !important;
+        text-transform: uppercase !important;
+      }
+
+      .print-meta-val {
+        font-size: 13px !important;
+        color: white !important;
+        font-weight: 600 !important;
+      }
       .meta-item.wide {
         flex: 0 0 100% !important;
         width: 100% !important;
@@ -744,6 +790,9 @@
 <header class="hero">
   <div class="hero-eyebrow" style="font-size:16px; letter-spacing:1px; padding:8px 24px;">منهجية منظمة</div>
   <p class="hero-sub" id="hero-sub-text" style="color:rgba(255,255,255,0.75); font-size:17px; margin-top:8px;">لقراءة المقالات البحثية بفاعلية وعمق</p>
+
+  <!-- عنصر مخصص للطباعة فقط -->
+  <div class="print-title-bar" id="print-title-bar" style="display:none"></div>
   <div class="paper-meta">
     <div class="meta-item wide">
       <span class="meta-label">عنوان الورقة</span>
@@ -1264,6 +1313,20 @@
     setText('d-field',   field);
     setText('d-journal', journal);
     if (title) document.title = title + (currentLang==='ar' ? ' — دليل القراءة العلمية' : ' — Scientific Reading Guide');
+
+    // تحديث عنصر الطباعة
+    const ptb = document.getElementById('print-title-bar');
+    if (ptb) {
+      const t2 = T[currentLang];
+      let html = title ? `<div style="font-size:15px;font-weight:800;color:white;margin-bottom:10px;line-height:1.6;">${title}</div>` : '';
+      html += `<div class="print-meta-row">`;
+      if (author)  html += `<div class="print-meta-item"><span class="print-meta-label">${t2.metaAuthor}</span><span class="print-meta-val">${author}</span></div>`;
+      if (year)    html += `<div class="print-meta-item"><span class="print-meta-label">${t2.metaYear}</span><span class="print-meta-val">${year}</span></div>`;
+      if (field)   html += `<div class="print-meta-item"><span class="print-meta-label">${t2.metaField}</span><span class="print-meta-val">${field}</span></div>`;
+      if (journal) html += `<div class="print-meta-item"><span class="print-meta-label">${t2.metaJournal}</span><span class="print-meta-val">${journal}</span></div>`;
+      html += `</div>`;
+      ptb.innerHTML = html;
+    }
 
     setHTML('d-problem', problem, t.phProblem);
 
