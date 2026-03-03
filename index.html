@@ -407,15 +407,90 @@
 
     /* ===== PRINT / PDF styles ===== */
     @media print {
-      .modal-overlay, .fab, .fab-tip, .lang-toggle, .pdf-btn { display:none !important; }
-      body { background:white; }
-      .hero { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-      .info-panel { -webkit-print-color-adjust:exact; print-color-adjust:exact; break-inside:avoid; }
-      .step-card { break-inside:avoid; }
-      .panel-connector { display:none; }
-      .container { padding:20px 16px; }
-      footer { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-      .owner-link { color:var(--gold) !important; }
+      @page {
+        size: A4;
+        margin: 0;
+      }
+
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+      .modal-overlay, .fab, .fab-tip, .lang-toggle, .pdf-btn,
+      #steps-section, .section-label { display:none !important; }
+
+      body {
+        background: var(--cream) !important;
+        margin: 0; padding: 0;
+        font-size: 13px;
+      }
+
+      /* Hero — full width dark block */
+      .hero {
+        padding: 36px 40px 44px !important;
+        page-break-after: avoid;
+        background: var(--deep) !important;
+      }
+
+      .paper-meta {
+        padding: 16px 24px !important;
+        gap: 14px !important;
+      }
+
+      /* Main container */
+      .container {
+        max-width: 100% !important;
+        padding: 24px 40px 0 !important;
+      }
+
+      /* Each panel: no page break inside, keep together */
+      .info-panel {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        margin-bottom: 16px !important;
+        padding: 24px 28px !important;
+      }
+
+      /* Hide decorative connectors */
+      .panel-connector { display: none !important; }
+
+      /* Footer */
+      footer {
+        background: var(--deep) !important;
+        padding: 24px !important;
+        margin-top: 24px;
+        break-inside: avoid;
+      }
+
+      .owner-link { color: var(--gold) !important; border-color: rgba(245,166,35,0.5) !important; }
+
+      /* Tool chips */
+      .tool-chip {
+        background: rgba(15,52,96,0.12) !important;
+        border: 1.5px solid rgba(15,52,96,0.25) !important;
+      }
+
+      /* Type badge */
+      .type-badge { background: var(--c4) !important; color: white !important; }
+
+      /* Q bullets */
+      .q-num { background: var(--c1) !important; color: white !important; }
+      .q-display-item { background: rgba(233,69,96,0.06) !important; }
+
+      /* Panel backgrounds */
+      .panel-q      { background: #fff5f7 !important; }
+      .panel-sum    { background: #faf5ff !important; }
+      .panel-method { background: #f0f4ff !important; }
+      .panel-type   { background: #f0fdfc !important; }
+      .panel-result { background: #fffbeb !important; }
+      .panel-disc   { background: #f0fdf4 !important; }
+
+      /* Panel tags */
+      .panel-tag { color: white !important; }
+      .panel-q .panel-tag      { background: var(--c1) !important; }
+      .panel-sum .panel-tag    { background: var(--c2) !important; }
+      .panel-method .panel-tag { background: var(--c3) !important; }
+      .panel-type .panel-tag   { background: var(--c4) !important; }
+      .panel-result .panel-tag { background: var(--c5) !important; }
+      .panel-disc .panel-tag   { background: var(--c6) !important; }
     }
 
     /* ===== LANG TOGGLE ===== */
