@@ -452,18 +452,24 @@
       /* العنوان يأخذ سطر كامل فوق بقية البيانات */
       .meta-item.wide {
         flex: 0 0 100% !important;
+        width: 100% !important;
         max-width: 100% !important;
         border-bottom: 1px solid rgba(255,255,255,0.15) !important;
         padding-bottom: 10px !important;
         margin-bottom: 4px !important;
       }
 
-      .meta-item.wide .meta-value {
-        font-size: 15px !important;
+      .meta-item.wide .meta-value,
+      #d-title {
+        font-size: 14px !important;
         max-width: 100% !important;
+        width: 100% !important;
         white-space: normal !important;
         word-break: break-word !important;
-        line-height: 1.5 !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+        line-height: 1.6 !important;
+        display: block !important;
       }
 
       /* Main container */
