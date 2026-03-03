@@ -261,6 +261,10 @@
       font-size:90px; opacity:0.06; line-height:1;
       pointer-events:none;
     }
+    @media print {
+      .info-panel::before { display:none !important; }
+      .info-panel::after  { display:none !important; content:none !important; }
+    }
     .panel-tag {
       display:inline-flex; align-items:center; gap:6px;
       background:var(--panel-color,#e94560); color:white;
@@ -355,6 +359,16 @@
     .empty-state p { font-size:14px; line-height:1.8; }
     .empty-state strong { color:var(--accent); }
 
+    /* Hide decorative floating illustrations inside panels on screen too when printing */
+    @media print {
+      .info-panel { position: relative !important; overflow: visible !important; }
+    }
+
+    /* Decorative emoji icon via data-icon attr — hide on print */
+    @media print {
+      [data-icon]::after { display: none !important; content: none !important; }
+    }
+
     @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 
     /* ===== FOOTER ===== */
@@ -409,7 +423,7 @@
     @media print {
       @page {
         size: A4;
-        margin: 0;
+        margin: 10mm 12mm;
       }
 
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -417,80 +431,102 @@
       .modal-overlay, .fab, .fab-tip, .lang-toggle, .pdf-btn,
       #steps-section, .section-label { display:none !important; }
 
-      body {
-        background: var(--cream) !important;
-        margin: 0; padding: 0;
-        font-size: 13px;
-      }
+      body { background: var(--cream) !important; margin:0; padding:0; }
 
-      /* Hero — full width dark block */
+      /* Hero — compact */
       .hero {
-        padding: 36px 40px 44px !important;
-        page-break-after: avoid;
+        padding: 28px 36px 32px !important;
         background: var(--deep) !important;
+        break-after: avoid;
       }
+      .hero::before, .hero::after { display:none !important; }
+      .hero-sub { margin-bottom: 20px !important; }
 
       .paper-meta {
-        padding: 16px 24px !important;
-        gap: 14px !important;
+        padding: 14px 20px !important;
+        gap: 12px !important;
+        max-width: 100% !important;
+        flex-wrap: wrap !important;
+      }
+
+      /* العنوان يأخذ سطر كامل فوق بقية البيانات */
+      .meta-item.wide {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        border-bottom: 1px solid rgba(255,255,255,0.15) !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 4px !important;
+      }
+
+      .meta-item.wide .meta-value {
+        font-size: 15px !important;
+        max-width: 100% !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        line-height: 1.5 !important;
       }
 
       /* Main container */
       .container {
         max-width: 100% !important;
-        padding: 24px 40px 0 !important;
+        padding: 20px 36px 0 !important;
       }
 
-      /* Each panel: no page break inside, keep together */
+      /* Remove pseudo-element icons from panels */
+      .info-panel::after { display: none !important; }
+      .info-panel::before { display: none !important; }
+
+      /* Each panel */
       .info-panel {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
-        margin-bottom: 16px !important;
-        padding: 24px 28px !important;
+        margin-bottom: 14px !important;
+        padding: 20px 24px !important;
+        border-radius: 16px !important;
       }
 
-      /* Hide decorative connectors */
+      /* Remove decorative illustrations (the ::after emoji icons) */
+      .info-panel[data-icon]::after { content: none !important; }
+
+      /* Hide connectors */
       .panel-connector { display: none !important; }
 
       /* Footer */
       footer {
         background: var(--deep) !important;
-        padding: 24px !important;
-        margin-top: 24px;
+        padding: 20px 24px !important;
+        margin-top: 16px;
         break-inside: avoid;
       }
 
       .owner-link { color: var(--gold) !important; border-color: rgba(245,166,35,0.5) !important; }
 
-      /* Tool chips */
-      .tool-chip {
-        background: rgba(15,52,96,0.12) !important;
-        border: 1.5px solid rgba(15,52,96,0.25) !important;
-      }
-
-      /* Type badge */
+      /* Chips and badges */
+      .tool-chip { background: rgba(15,52,96,0.12) !important; border: 1.5px solid rgba(15,52,96,0.25) !important; }
       .type-badge { background: var(--c4) !important; color: white !important; }
-
-      /* Q bullets */
       .q-num { background: var(--c1) !important; color: white !important; }
       .q-display-item { background: rgba(233,69,96,0.06) !important; }
 
       /* Panel backgrounds */
-      .panel-q      { background: #fff5f7 !important; }
-      .panel-sum    { background: #faf5ff !important; }
-      .panel-method { background: #f0f4ff !important; }
-      .panel-type   { background: #f0fdfc !important; }
-      .panel-result { background: #fffbeb !important; }
-      .panel-disc   { background: #f0fdf4 !important; }
+      .panel-q      { background: #fff5f7 !important; border-color: #fecdd3 !important; }
+      .panel-sum    { background: #faf5ff !important; border-color: #e9d5ff !important; }
+      .panel-method { background: #f0f4ff !important; border-color: #c7d2fe !important; }
+      .panel-type   { background: #f0fdfc !important; border-color: #99f6e4 !important; }
+      .panel-result { background: #fffbeb !important; border-color: #fde68a !important; }
+      .panel-disc   { background: #f0fdf4 !important; border-color: #bbf7d0 !important; }
 
       /* Panel tags */
-      .panel-tag { color: white !important; }
+      .panel-tag { color: white !important; -webkit-print-color-adjust: exact !important; }
       .panel-q .panel-tag      { background: var(--c1) !important; }
       .panel-sum .panel-tag    { background: var(--c2) !important; }
       .panel-method .panel-tag { background: var(--c3) !important; }
       .panel-type .panel-tag   { background: var(--c4) !important; }
       .panel-result .panel-tag { background: var(--c5) !important; }
       .panel-disc .panel-tag   { background: var(--c6) !important; }
+
+      /* Hide the decorative background illustrations in panels */
+      .panel-q .panel-tag svg,
+      .info-panel img { display: none !important; }
     }
 
     /* ===== LANG TOGGLE ===== */
@@ -1285,7 +1321,17 @@
     // Hide steps if still visible
     const stepsSection = document.getElementById('steps-section');
     if (stepsSection) stepsSection.style.display = 'none';
+
+    // Temporarily hide decorative images inside panels
+    const imgs = document.querySelectorAll('.info-panel img, .info-panel .panel-img');
+    imgs.forEach(el => el.style.display = 'none');
+
     window.print();
+
+    // Restore after print dialog
+    setTimeout(() => {
+      imgs.forEach(el => el.style.display = '');
+    }, 1000);
   }
 
   document.getElementById('modal').addEventListener('click', function(e) {
