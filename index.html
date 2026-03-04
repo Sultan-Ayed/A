@@ -430,7 +430,7 @@
       <div class="field"><label id="l-journal">المجلة / الناشر</label><input type="text" id="f-journal" placeholder="مثال: IEEE, Nature..." /></div>
     </div>
 
-    <div class="modal-section-title" id="ms-q">١ — سؤال البحث والمشكلة</div>
+    <div class="modal-section-title" id="ms-q">سؤال البحث والمشكلة</div>
     <div class="field-group full"><div class="field">
       <label id="l-problem">المشكلة البحثية</label>
       <textarea id="f-problem" placeholder="ما المشكلة التي تعالجها الدراسة؟"></textarea>
@@ -443,13 +443,13 @@
       <button class="add-q-btn" id="add-q-btn" onclick="addQuestion()">+ أضف سؤالاً</button>
     </div></div>
 
-    <div class="modal-section-title" id="ms-sum">٢ — ملخص الورقة</div>
+    <div class="modal-section-title" id="ms-sum">ملخص الورقة</div>
     <div class="field-group full"><div class="field">
       <label id="l-summary">الملخص</label>
       <textarea id="f-summary" placeholder="ملخص موجز للورقة..." style="min-height:85px;"></textarea>
     </div></div>
 
-    <div class="modal-section-title" id="ms-method">٣ — المنهجية والأدوات</div>
+    <div class="modal-section-title" id="ms-method">المنهجية والأدوات</div>
     <div class="field-group full"><div class="field">
       <label id="l-method">المنهجية</label>
       <textarea id="f-method" placeholder="المنهج المتبع في الدراسة..." style="min-height:65px;"></textarea>
@@ -460,7 +460,7 @@
       <small style="font-size:11px;color:var(--ink-faint);margin-top:3px;" id="tools-hint">افصل بين الأدوات بفاصلة</small>
     </div></div>
 
-    <div class="modal-section-title" id="ms-type">٤ — نوع الدراسة</div>
+    <div class="modal-section-title" id="ms-type">نوع الدراسة</div>
     <div class="field-group">
       <div class="field">
         <label id="l-studytype">نوع الدراسة</label>
@@ -474,13 +474,13 @@
       <div class="field"><label id="l-sample">العينة / النطاق</label><input type="text" id="f-sample" placeholder="مثال: 200 مشارك..." /></div>
     </div>
 
-    <div class="modal-section-title" id="ms-result">٥ — النتائج الرئيسية</div>
+    <div class="modal-section-title" id="ms-result">النتائج الرئيسية</div>
     <div class="field-group full"><div class="field">
       <label id="l-results">النتائج</label>
       <textarea id="f-results" placeholder="أبرز ما توصلت إليه الدراسة..." style="min-height:75px;"></textarea>
     </div></div>
 
-    <div class="modal-section-title" id="ms-disc">٦ — المناقشة والاستنتاج</div>
+    <div class="modal-section-title" id="ms-disc">المناقشة والاستنتاج</div>
     <div class="field-group full"><div class="field">
       <label id="l-discussion">المناقشة</label>
       <textarea id="f-discussion" placeholder="كيف يفسر المؤلفون النتائج؟" style="min-height:65px;"></textarea>
@@ -557,9 +557,7 @@
 
   <!-- 1. سؤال البحث -->
   <div class="section sec-q">
-    <div class="section-header">
-      <div class="section-num">١</div>
-      <div class="section-title" id="sh-q">سؤال البحث والمشكلة</div>
+    <div class="section-header"><div class="section-num"></div><div class="section-title" id="sh-q">سؤال البحث والمشكلة</div>
       <div class="section-badge" id="sb-q">Research Question</div>
     </div>
     <div class="section-body">
@@ -574,9 +572,7 @@
 
   <!-- 2. الملخص -->
   <div class="section sec-sum">
-    <div class="section-header">
-      <div class="section-num">٢</div>
-      <div class="section-title" id="sh-sum">ملخص الورقة</div>
+    <div class="section-header"><div class="section-num"></div><div class="section-title" id="sh-sum">ملخص الورقة</div>
       <div class="section-badge" id="sb-sum">Abstract</div>
     </div>
     <div class="section-body">
@@ -586,9 +582,7 @@
 
   <!-- 3. المنهجية -->
   <div class="section sec-meth">
-    <div class="section-header">
-      <div class="section-num">٣</div>
-      <div class="section-title" id="sh-meth">المنهجية والأدوات</div>
+    <div class="section-header"><div class="section-num"></div><div class="section-title" id="sh-meth">المنهجية والأدوات</div>
       <div class="section-badge" id="sb-meth">Methodology</div>
     </div>
     <div class="section-body">
@@ -602,9 +596,7 @@
 
   <!-- 4. نوع الدراسة -->
   <div class="section sec-type">
-    <div class="section-header">
-      <div class="section-num">٤</div>
-      <div class="section-title" id="sh-type">نوع الدراسة</div>
+    <div class="section-header"><div class="section-num"></div><div class="section-title" id="sh-type">نوع الدراسة</div>
       <div class="section-badge" id="sb-type">Study Design</div>
     </div>
     <div class="section-body">
@@ -614,9 +606,7 @@
 
   <!-- 5. النتائج -->
   <div class="section sec-res">
-    <div class="section-header">
-      <div class="section-num">٥</div>
-      <div class="section-title" id="sh-res">النتائج الرئيسية</div>
+    <div class="section-header"><div class="section-num"></div><div class="section-title" id="sh-res">النتائج الرئيسية</div>
       <div class="section-badge" id="sb-res">Results</div>
     </div>
     <div class="section-body">
@@ -626,9 +616,7 @@
 
   <!-- 6. المناقشة -->
   <div class="section sec-disc">
-    <div class="section-header">
-      <div class="section-num">٦</div>
-      <div class="section-title" id="sh-disc">المناقشة والاستنتاج</div>
+    <div class="section-header"><div class="section-num"></div><div class="section-title" id="sh-disc">المناقشة والاستنتاج</div>
       <div class="section-badge" id="sb-disc">Discussion</div>
     </div>
     <div class="section-body" style="border-bottom:none;">
@@ -670,9 +658,9 @@
     ar: {
       dir:'rtl', htmlLang:'ar',
       mTitle:'بيانات الورقة البحثية', mSub:'أدخل معلومات الورقة وستظهر في القالب مباشرةً',
-      msBasic:'المعلومات الأساسية', msQ:'١ — سؤال البحث والمشكلة',
-      msSum:'٢ — ملخص الورقة', msMeth:'٣ — المنهجية والأدوات',
-      msType:'٤ — نوع الدراسة', msRes:'٥ — النتائج الرئيسية', msDisc:'٦ — المناقشة والاستنتاج',
+      msBasic:'المعلومات الأساسية', msQ:'سؤال البحث والمشكلة',
+      msSum:'ملخص الورقة', msMeth:'المنهجية والأدوات',
+      msType:'نوع الدراسة', msRes:'النتائج الرئيسية', msDisc:'المناقشة والاستنتاج',
       lTitle:'عنوان الورقة', lAuthor:'المؤلف / الباحث', lYear:'سنة النشر',
       lField:'المجال البحثي', lJournal:'المجلة / الناشر',
       lProblem:'المشكلة البحثية', lQuestions:'الأسئلة البحثية',
@@ -701,9 +689,9 @@
     en: {
       dir:'ltr', htmlLang:'en',
       mTitle:'Paper Details', mSub:'Fill in the paper details and they will appear in the template instantly',
-      msBasic:'Basic Information', msQ:'1 — Research Question & Problem',
-      msSum:'2 — Abstract / Summary', msMeth:'3 — Methodology & Tools',
-      msType:'4 — Study Design', msRes:'5 — Key Results', msDisc:'6 — Discussion & Conclusion',
+      msBasic:'Basic Information', msQ:'Research Question & Problem',
+      msSum:'Abstract / Summary', msMeth:'Methodology & Tools',
+      msType:'Study Design', msRes:'Key Results', msDisc:'Discussion & Conclusion',
       lTitle:'Paper Title', lAuthor:'Author(s)', lYear:'Year',
       lField:'Research Field', lJournal:'Journal / Publisher',
       lProblem:'Research Problem', lQuestions:'Research Questions',
