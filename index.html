@@ -25,40 +25,6 @@
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
-    /* ===== ACADEMIC BORDER ===== */
-    body {
-      background: #eef0f2;
-    }
-
-    .page-wrap {
-      background: white;
-      max-width: 860px;
-      margin: 32px auto;
-      box-shadow:
-        0 0 0 1px #c9d1d9,
-        0 0 0 5px white,
-        0 0 0 6px #0d1117,
-        0 8px 40px rgba(0,0,0,0.15);
-      position: relative;
-    }
-
-    /* خطان أفقيان ذهبيان في الأعلى - زخرفة أكاديمية */
-    .page-wrap::before {
-      content: '';
-      display: block;
-      height: 4px;
-      background: linear-gradient(to left, #0d1117 0%, #0969da 50%, #0d1117 100%);
-    }
-
-    /* خط سفلي */
-    .page-wrap::after {
-      content: '';
-      display: block;
-      height: 4px;
-      background: linear-gradient(to left, #0d1117 0%, #0969da 50%, #0d1117 100%);
-    }
-
-
 
     body {
       font-family: 'IBM Plex Sans Arabic', sans-serif;
@@ -220,7 +186,6 @@
 
     /* ===== HEADER ===== */
     .page-header {
-      position: sticky; top:0; z-index:10;
       border-bottom: 1px solid var(--border);
       padding: 20px 48px 18px;
       display: flex;
@@ -398,46 +363,68 @@
     .footer-label { font-size:10px; color:var(--ink-faint); letter-spacing:1px; text-transform:uppercase; }
     .footer-date { font-size:12px; color:var(--ink-muted); font-weight:500; }
 
-
-
-
-
     /* ===== PRINT ===== */
+
+    /* ===== إطار الطباعة ===== */
+    .print-border-frame { display: none; }
+
     @media print {
+      .print-border-frame {
+        display: block !important;
+        position: fixed;
+        top: 6mm; left: 6mm; right: 6mm; bottom: 6mm;
+        border: 2px solid #24292f;
+        border-radius: 2px;
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      /* تقليل المارجن ليترك مساحة للإطار */
+      @page { size: A4; margin: 14mm 16mm; }
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 16mm 18mm;
+        border: none;
+      }
+
+      /* إطار أنيق على كل صفحة */
+      @page {
+        @top-left { content: ''; }
+      }
+
+      /* محاكاة الإطار عبر body border */
+      html {
+        height: 100%;
+      }
+
+      body {
+        border: 2.5px solid #24292f !important;
+        border-radius: 0 !important;
+        min-height: 100%;
+        position: relative;
+      }
+
+      /* إزالة الفراغ بين الصفحات */
+      * { -webkit-column-break-inside: avoid; }
+
+      .section {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      .section-body {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
       * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
 
-      /* إطار الصفحة */
-      .page-frame {
-        border: 1.5px solid #24292f !important;
-        padding: 0 !important;
-        display: block !important;
-      }
-
-      @page { size:A4; margin: 15mm 18mm; }
-
-      body { background: white !important; }
-
-      .page-wrap {
-        margin: 0 !important;
-        box-shadow: none !important;
-        border: 1px solid #c9d1d9 !important;
-        border-top: none !important;
-        border-bottom: none !important;
-      }
-
-      .page-wrap::before,
-      .page-wrap::after {
-        height: 4px !important;
-        background: #0d1117 !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-
       .modal-overlay, .fab, .fab-tip, .lang-toggle, .pdf-btn { display:none !important; }
-      body { font-size:13px; background:white !important; }
+      body { font-size:13px; }
 
-      .page-header {
-      position: sticky; top:0; z-index:10; position:static !important; border-bottom:2px solid var(--ink) !important; padding:12px 0 10px; }
+      .page-header { position:static; border-bottom:2px solid var(--ink) !important; padding:12px 0 10px; }
       .header-logo { background:var(--ink) !important; }
 
       .title-block { padding:20px 0 16px; border-bottom:1px solid var(--border-strong) !important; }
@@ -446,10 +433,8 @@
 
       .main-layout { padding:20px 0 40px; max-width:100%; }
 
-      /* منع انكسار الأقسام */
-      .section { break-inside:avoid !important; page-break-inside:avoid !important; }
-      .section-header { break-after:avoid !important; }
       .section-body { padding-bottom:16px !important; }
+      .section-header { padding:10px 0 8px !important; margin-bottom:12px !important; }
 
       .chip { background:var(--accent-bg) !important; color:var(--accent) !important; }
       .type-pill { background:var(--teal) !important; color:white !important; }
@@ -462,6 +447,8 @@
       .sec-type .section-num { background:var(--teal) !important; }
       .sec-res  .section-num { background:var(--orange) !important; }
       .sec-disc .section-num { background:var(--green) !important; }
+
+      .page-footer { padding:12px 0; border-top:1px solid var(--border-strong) !important; }
     }
 
     @media(max-width:600px){
@@ -473,7 +460,9 @@
   </style>
 </head>
 <body>
-<div class="page-wrap">
+
+<!-- PRINT BORDER - يظهر فقط عند الطباعة -->
+<div class="print-border-frame"></div>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modal">
@@ -929,6 +918,5 @@
   document.getElementById('modal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 </script>
-</div>
 </body>
 </html>
