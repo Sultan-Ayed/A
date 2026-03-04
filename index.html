@@ -1,1412 +1,652 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>دليل قراءة الورقة العلمية</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --ink: #1a1a2e;
-      --deep: #16213e;
-      --accent: #e94560;
-      --gold: #f5a623;
-      --cream: #f8f4e8;
-      --light: #ffffff;
-      --muted: #6b7280;
-      /* section colors */
-      --c1: #e94560; /* سؤال البحث */
-      --c2: #8b5cf6; /* ملخص */
-      --c3: #0f3460; /* منهجية */
-      --c4: #2ec4b6; /* نوع الدراسة */
-      --c5: #f5a623; /* النتائج */
-      --c6: #16a34a; /* مناقشة */
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Cairo',sans-serif; background:var(--cream); color:var(--ink); min-height:100vh; overflow-x:hidden; }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Paper Reading Protocol | بروتوكول قراءة الأوراق العلمية</title>
+  <meta name="description" content="بروتوكول 10 خطوات لقراءة الأوراق العلمية + قوالب نشر لـ X وLinkedIn + One‑Pager + Graphical Abstract." />
 
-    /* ===== MODAL ===== */
-    .modal-overlay {
-      position:fixed; inset:0;
-      background:rgba(22,33,62,0.93);
-      z-index:1000;
-      display:flex; align-items:center; justify-content:center;
-      padding:16px;
-      backdrop-filter:blur(8px);
-      animation:fadeIn 0.3s ease;
-    }
-    .modal-overlay.hidden { display:none; }
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  <!-- Open Graph (LinkedIn/X) -->
+  <meta property="og:title" content="بروتوكول قراءة الأوراق العلمية | Paper Reading Protocol" />
+  <meta property="og:description" content="10 خطوات + قوالب جاهزة + مثال تطبيقي. مناسب للباحثين وطلاب الدراسات العليا." />
+  <meta property="og:type" content="website" />
 
-    .modal-box {
-      background:white; border-radius:28px; padding:36px 32px;
-      width:100%; max-width:680px; max-height:92vh; overflow-y:auto;
-      animation:slideUp 0.4s cubic-bezier(0.16,1,0.3,1);
-      scrollbar-width:thin; scrollbar-color:#e5e7eb transparent;
-    }
-    @keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+  <!-- Fonts (اختياري: سيعمل بدونها) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    .modal-header { margin-bottom:24px; text-align:center; }
-    .modal-badge {
-      display:inline-block; background:var(--accent); color:white;
-      font-size:10px; letter-spacing:3px; padding:5px 16px;
-      border-radius:20px; font-weight:700; margin-bottom:12px;
-    }
-    .modal-title { font-family:'Amiri',serif; font-size:24px; color:var(--ink); font-weight:700; }
-    .modal-subtitle { font-size:12px; color:var(--muted); margin-top:5px; line-height:1.6; }
-
-    /* Section dividers inside modal */
-    .modal-section {
-      border-radius:16px; padding:18px 20px; margin-bottom:16px;
-      border: 1.5px solid;
-    }
-    .modal-section-title {
-      font-size:11px; font-weight:800; letter-spacing:2px;
-      margin-bottom:14px; display:flex; align-items:center; gap:8px;
-    }
-    .modal-section-title .dot {
-      width:8px; height:8px; border-radius:50%; flex-shrink:0;
-    }
-
-    .ms-basic  { background:#fafafa;       border-color:#f0f0f0; }
-    .ms-q      { background:#fff5f7;       border-color:#fecdd3; }
-    .ms-sum    { background:#faf5ff;       border-color:#e9d5ff; }
-    .ms-method { background:#f0f4ff;       border-color:#c7d2fe; }
-    .ms-type   { background:#f0fdfc;       border-color:#99f6e4; }
-    .ms-result { background:#fffbeb;       border-color:#fde68a; }
-    .ms-disc   { background:#f0fdf4;       border-color:#bbf7d0; }
-
-    .ms-q .modal-section-title      { color:var(--c1); }
-    .ms-sum .modal-section-title     { color:var(--c2); }
-    .ms-method .modal-section-title  { color:var(--c3); }
-    .ms-type .modal-section-title    { color:var(--c4); }
-    .ms-result .modal-section-title  { color:var(--c5); }
-    .ms-disc .modal-section-title    { color:var(--c6); }
-
-    .field-group { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-    .field-group.full { grid-template-columns:1fr; }
-    .field { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
-    .field:last-child { margin-bottom:0; }
-    .field label { font-size:11px; font-weight:700; color:var(--ink); }
-    .field label span { color:var(--accent); }
-    .field input, .field textarea, .field select {
-      font-family:'Cairo',sans-serif; font-size:13px; color:var(--ink);
-      background:#f8f9fb; border:1.5px solid #e5e7eb; border-radius:10px;
-      padding:10px 14px; outline:none; transition:border-color 0.2s,box-shadow 0.2s;
-      resize:vertical; direction:rtl;
-    }
-    .field input:focus,.field textarea:focus,.field select:focus {
-      border-color:var(--accent); box-shadow:0 0 0 3px rgba(233,69,96,0.1); background:white;
-    }
-    .field textarea { min-height:80px; }
-
-    /* questions builder */
-    .questions-builder { display:flex; flex-direction:column; gap:8px; margin-bottom:8px; }
-    .q-row { display:flex; align-items:center; gap:8px; }
-    .q-row input {
-      font-family:'Cairo',sans-serif; font-size:13px; color:var(--ink);
-      background:#f8f9fb; border:1.5px solid #e5e7eb; border-radius:10px;
-      padding:9px 13px; outline:none; flex:1; direction:rtl; transition:border-color 0.2s;
-    }
-    .q-row input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(233,69,96,0.1); background:white; }
-    .q-del {
-      width:32px; height:32px; border:none; background:#fef2f4;
-      color:var(--accent); border-radius:8px; cursor:pointer;
-      font-size:17px; display:flex; align-items:center; justify-content:center;
-      transition:background 0.2s; flex-shrink:0;
-    }
-    .q-del:hover { background:#fde8ec; }
-    .add-q-btn {
-      background:none; border:1.5px dashed #d1d5db; border-radius:10px;
-      padding:9px; width:100%; cursor:pointer;
-      font-family:'Cairo',sans-serif; font-size:12px; color:var(--muted);
-      transition:all 0.2s;
-    }
-    .add-q-btn:hover { border-color:var(--accent); color:var(--accent); background:#fef2f4; }
-
-    .modal-actions { margin-top:22px; display:flex; gap:10px; }
-    .btn-submit {
-      flex:1; background:var(--accent); color:white; border:none;
-      border-radius:14px; padding:15px;
-      font-family:'Cairo',sans-serif; font-size:14px; font-weight:700;
-      cursor:pointer; transition:background 0.2s,transform 0.1s;
-    }
-    .btn-submit:hover { background:#d63651; }
-    .btn-submit:active { transform:scale(0.98); }
-    .btn-cancel {
-      background:#f3f4f6; color:var(--ink); border:none;
-      border-radius:14px; padding:15px 18px;
-      font-family:'Cairo',sans-serif; font-size:13px; font-weight:600;
-      cursor:pointer; transition:background 0.2s; display:none;
-    }
-    .btn-cancel:hover { background:#e5e7eb; }
-
-    /* ===== FAB ===== */
-    .fab {
-      position:fixed; bottom:28px; left:28px;
-      width:56px; height:56px;
-      background:var(--accent); color:white; border:none;
-      border-radius:50%; font-size:22px; cursor:pointer;
-      box-shadow:0 8px 24px rgba(233,69,96,0.4);
-      z-index:500; transition:transform 0.2s,box-shadow 0.2s;
-      display:flex; align-items:center; justify-content:center;
-    }
-    .fab:hover { transform:scale(1.1); box-shadow:0 12px 32px rgba(233,69,96,0.5); }
-    .fab-tip {
-      position:fixed; bottom:94px; left:28px;
-      background:var(--ink); color:white;
-      font-family:'Cairo',sans-serif;
-      font-size:11px; padding:6px 14px;
-      border-radius:8px; white-space:nowrap;
-      opacity:0; pointer-events:none; transition:opacity 0.2s;
-    }
-    .fab:hover ~ .fab-tip { opacity:1; }
-
-    /* ===== HERO ===== */
-    .hero {
-      background:var(--deep); position:relative;
-      padding:60px 40px 80px; overflow:hidden; text-align:center;
-    }
-    .hero::before {
-      content:''; position:absolute; top:-60px; right:-60px;
-      width:300px; height:300px; border-radius:50%;
-      background:radial-gradient(circle,rgba(233,69,96,0.25) 0%,transparent 70%);
-    }
-    .hero::after {
-      content:''; position:absolute; bottom:-80px; left:-40px;
-      width:250px; height:250px; border-radius:50%;
-      background:radial-gradient(circle,rgba(245,166,35,0.2) 0%,transparent 70%);
-    }
-    .hero-eyebrow {
-      display:inline-block; background:var(--accent); color:#fff;
-      font-size:11px; letter-spacing:3px; padding:5px 18px;
-      border-radius:20px; margin-bottom:24px; font-weight:700;
-      position:relative; z-index:2;
-    }
-    .hero-title {
-      font-family:'Amiri',serif; font-size:clamp(36px,6vw,68px); font-weight:700;
-      color:var(--light); line-height:1.2; position:relative; z-index:2; margin-bottom:16px;
-    }
-    .hero-title span { color:var(--gold); }
-    .hero-sub {
-      font-size:15px; color:rgba(255,255,255,0.55);
-      position:relative; z-index:2; max-width:500px; margin:0 auto 32px; line-height:1.8;
-    }
-    .paper-meta {
-      background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
-      border-radius:16px; padding:20px 30px;
-      display:flex; flex-wrap:wrap; gap:20px; justify-content:center;
-      max-width:900px; margin:0 auto; position:relative; z-index:2;
-      backdrop-filter:blur(10px);
-    }
-    .meta-item { display:flex; flex-direction:column; align-items:center; gap:4px; max-width:260px; }
-    .meta-item.wide { max-width:360px; }
-    .meta-label { font-size:10px; color:rgba(255,255,255,0.4); letter-spacing:2px; }
-    .meta-value { font-size:14px; color:var(--light); font-weight:600; max-width:220px; text-align:center; word-break:break-word; line-height:1.4; }
-    .meta-divider { width:1px; background:rgba(255,255,255,0.15); align-self:stretch; }
-
-    /* ===== MAIN ===== */
-    .container { max-width:920px; margin:0 auto; padding:60px 24px; }
-
-    .section-label { display:flex; align-items:center; gap:14px; margin-bottom:28px; }
-    .section-label .line { flex:1; height:1px; background:linear-gradient(to left,transparent,rgba(26,26,46,0.2)); }
-    .section-label span { font-size:11px; letter-spacing:3px; color:var(--accent); font-weight:700; white-space:nowrap; }
-
-    /* ===== STEPS ===== */
-    .steps-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; margin-bottom:60px; }
-    .step-card {
-      background:white; border-radius:20px; padding:28px 24px;
-      position:relative; overflow:hidden;
-      transition:transform 0.3s,box-shadow 0.3s;
-      border:1.5px solid transparent;
-      animation:fadeUp 0.5s ease both;
-    }
-    .step-card:hover { transform:translateY(-6px); box-shadow:0 20px 40px rgba(26,26,46,0.12); border-color:var(--ca); }
-    .step-card::before {
-      content:''; position:absolute; top:0; right:0;
-      width:80px; height:80px; border-radius:0 20px 0 80px;
-      background:var(--ca,#e94560); opacity:0.08; transition:opacity 0.3s;
-    }
-    .step-card:hover::before { opacity:0.15; }
-    .step-num { font-size:11px; font-weight:900; color:var(--ca,#e94560); letter-spacing:2px; margin-bottom:12px; display:block; }
-    .step-icon { font-size:28px; margin-bottom:12px; display:block; }
-    .step-title { font-size:15px; font-weight:700; color:var(--ink); margin-bottom:8px; line-height:1.4; }
-    .step-body { font-size:13px; color:var(--muted); line-height:1.8; }
-    .step-tag { display:inline-block; margin-top:12px; background:var(--cream); color:var(--ca,#e94560); font-size:10px; font-weight:700; padding:4px 12px; border-radius:20px; letter-spacing:1px; }
-    .step-card:nth-child(1){--ca:#e94560;animation-delay:.05s}
-    .step-card:nth-child(2){--ca:#f5a623;animation-delay:.10s}
-    .step-card:nth-child(3){--ca:#2ec4b6;animation-delay:.15s}
-    .step-card:nth-child(4){--ca:#8b5cf6;animation-delay:.20s}
-    .step-card:nth-child(5){--ca:#e94560;animation-delay:.25s}
-    .step-card:nth-child(6){--ca:#0f3460;animation-delay:.30s}
-    .step-card:nth-child(7){--ca:#f5a623;animation-delay:.35s}
-    .step-card:nth-child(8){--ca:#2ec4b6;animation-delay:.40s}
-    .step-card:nth-child(9){--ca:#8b5cf6;animation-delay:.45s}
-    .step-card:nth-child(10){--ca:#e94560;animation-delay:.50s}
-
-    /* ===== INFO PANELS (new sections) ===== */
-    .info-panel {
-      border-radius:24px; padding:36px 40px; margin-bottom:28px;
-      position:relative; overflow:hidden;
-    }
-    .info-panel::before {
-      content:''; position:absolute;
-      top:-30px; left:-30px;
-      width:120px; height:120px; border-radius:50%;
-      background:var(--panel-color,#e94560); opacity:0.07;
-    }
-    .info-panel::after {
-      content:attr(data-icon);
-      position:absolute; bottom:-10px; left:20px;
-      font-size:90px; opacity:0.06; line-height:1;
-      pointer-events:none;
-    }
-    @media print {
-      .info-panel::before { display:none !important; }
-      .info-panel::after  { display:none !important; content:none !important; }
-    }
-    .panel-tag {
-      display:inline-flex; align-items:center; gap:6px;
-      background:var(--panel-color,#e94560); color:white;
-      font-size:10px; letter-spacing:2px; font-weight:800;
-      padding:5px 14px; border-radius:20px; margin-bottom:16px;
-    }
-    .panel-title {
-      font-family:'Amiri',serif; font-size:20px; font-weight:700;
-      color:var(--panel-color,#e94560); margin-bottom:12px; line-height:1.4;
-    }
-    .panel-content {
-      font-size:15px; color:var(--ink); line-height:2;
-      position:relative; z-index:1;
-    }
-    .panel-content .placeholder {
-      color:#c0c0c0; font-style:italic; font-size:14px;
-    }
-
-    /* color variants */
-    .panel-q      { --panel-color:var(--c1); background:#fff5f7; border:1.5px solid #fecdd3; }
-    .panel-sum    { --panel-color:var(--c2); background:#faf5ff; border:1.5px solid #e9d5ff; }
-    .panel-method { --panel-color:var(--c3); background:#f0f4ff; border:1.5px solid #c7d2fe; }
-    .panel-type   { --panel-color:var(--c4); background:#f0fdfc; border:1.5px solid #99f6e4; }
-    .panel-result { --panel-color:var(--c5); background:#fffbeb; border:1.5px solid #fde68a; }
-    .panel-disc   { --panel-color:var(--c6); background:#f0fdf4; border:1.5px solid #bbf7d0; }
-
-    /* connector line between panels */
-    .panel-connector {
-      display:flex; align-items:center; justify-content:center;
-      margin:-12px 0; position:relative; z-index:2;
-    }
-    .panel-connector svg { display:block; }
-
-    /* questions list in panel */
-    .q-display-list { display:flex; flex-direction:column; gap:10px; }
-    .q-display-item {
-      display:flex; align-items:flex-start; gap:12px;
-      background:rgba(233,69,96,0.05); border-radius:12px; padding:12px 16px;
-    }
-    .q-num {
-      width:28px; height:28px; min-width:28px;
-      background:var(--c1); border-radius:8px;
-      display:flex; align-items:center; justify-content:center;
-      font-size:12px; font-weight:700; color:white;
-    }
-    .q-txt { font-size:14px; color:var(--ink); line-height:1.7; padding-top:3px; }
-
-    /* tags for study type */
-    .type-badge {
-      display:inline-block;
-      background:var(--c4); color:white;
-      font-size:13px; font-weight:700;
-      padding:8px 20px; border-radius:30px;
-      letter-spacing:1px;
-    }
-
-    /* tools chips */
-    .tools-chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
-    .tool-chip {
-      background:rgba(15,52,96,0.1); color:var(--c3);
-      border:1.5px solid rgba(15,52,96,0.2);
-      font-size:12px; font-weight:700;
-      padding:6px 14px; border-radius:30px; letter-spacing:0.5px;
-    }
-
-    /* ===== OLD QUESTIONS (كأسئلة بحثية مستقلة) ===== */
-    .questions-list { display:flex; flex-direction:column; gap:14px; margin-bottom:28px; }
-    .question-item {
-      display:flex; align-items:flex-start; gap:16px;
-      background:white; border-radius:14px; padding:18px 22px;
-      border-right:4px solid var(--accent); transition:box-shadow 0.2s;
-    }
-    .question-item:hover { box-shadow:0 8px 24px rgba(0,0,0,0.08); }
-    .q-bullet {
-      width:32px; height:32px; min-width:32px;
-      background:var(--accent); border-radius:8px;
-      display:flex; align-items:center; justify-content:center;
-      font-size:13px; font-weight:700; color:white;
-    }
-    .q-text { font-size:14px; color:var(--ink); line-height:1.7; padding-top:4px; }
-
-    /* ===== NOTES ===== */
-    .notes-area { background:white; border-radius:20px; padding:32px; margin-bottom:60px; margin-top:28px; }
-    .notes-title { font-size:16px; font-weight:700; color:var(--ink); margin-bottom:20px; display:flex; align-items:center; gap:10px; }
-    .notes-title::before { content:'✏️'; }
-    .notes-lines { display:flex; flex-direction:column; gap:12px; }
-    .notes-line { height:40px; border-bottom:1.5px dashed rgba(0,0,0,0.1); }
-
-    /* empty state */
-    .empty-state { text-align:center; padding:40px 20px; color:var(--muted); }
-    .empty-state .eicon { font-size:46px; margin-bottom:10px; }
-    .empty-state p { font-size:14px; line-height:1.8; }
-    .empty-state strong { color:var(--accent); }
-
-    /* Hide decorative floating illustrations inside panels on screen too when printing */
-    @media print {
-      .info-panel { position: relative !important; overflow: visible !important; }
-    }
-
-    /* Decorative emoji icon via data-icon attr — hide on print */
-    @media print {
-      [data-icon]::after { display: none !important; content: none !important; }
-    }
-
-    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-
-    /* ===== FOOTER ===== */
-    footer { background:var(--deep); padding:36px 32px; text-align:center; }
-    .footer-owner {
-      display:inline-flex; flex-direction:column; align-items:center; gap:8px;
-      margin-bottom:20px;
-    }
-    .owner-name {
-      font-family:'Amiri',serif; font-size:26px; color:var(--light);
-      font-weight:700; letter-spacing:0.5px;
-    }
-    .owner-link {
-      display:inline-flex; align-items:center; gap:6px;
-      color:var(--gold); font-size:13px; font-weight:600;
-      text-decoration:none; letter-spacing:0.5px;
-      border:1px solid rgba(245,166,35,0.3);
-      padding:6px 16px; border-radius:20px;
-      transition:all 0.2s;
-    }
-    .owner-link:hover {
-      background:rgba(245,166,35,0.12);
-      border-color:var(--gold);
-    }
-    .footer-divider {
-      width:60px; height:1px;
-      background:rgba(255,255,255,0.12);
-      margin:0 auto 20px;
-    }
-    .footer-brand { font-family:'Amiri',serif; font-size:18px; color:rgba(255,255,255,0.45); margin-bottom:6px; }
-    .footer-sub { font-size:11px; color:rgba(255,255,255,0.25); letter-spacing:2px; }
-
-    /* ===== PDF BUTTON ===== */
-    .pdf-btn {
-      position:fixed; bottom:28px; right:28px;
-      display:flex; align-items:center; gap:8px;
-      background:var(--deep); color:var(--gold);
-      border:1.5px solid rgba(245,166,35,0.4);
-      border-radius:30px; padding:12px 20px;
-      font-family:'Cairo',sans-serif; font-size:13px; font-weight:700;
-      cursor:pointer;
-      box-shadow:0 4px 16px rgba(0,0,0,0.25);
-      z-index:500; transition:all 0.2s;
-    }
-    .pdf-btn:hover {
-      background:var(--gold); color:var(--deep);
-      box-shadow:0 8px 24px rgba(245,166,35,0.35);
-      transform:translateY(-2px);
-    }
-
-    /* ===== PRINT / PDF styles ===== */
-    @media print {
-      @page {
-        size: A4;
-        margin: 10mm 12mm;
-      }
-
-      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-
-      .modal-overlay, .fab, .fab-tip, .lang-toggle, .pdf-btn,
-      #steps-section, .section-label { display:none !important; }
-
-      body { background: var(--cream) !important; margin:0; padding:0; }
-
-      /* Hero — compact */
-      .hero {
-        padding: 28px 36px 32px !important;
-        background: var(--deep) !important;
-        break-after: avoid;
-      }
-      .hero-eyebrow, .hero-sub { display: none !important; }
-      .hero-sub { margin-bottom: 20px !important; }
-
-      .paper-meta {
-        padding: 14px 20px !important;
-        gap: 12px !important;
-        max-width: 100% !important;
-        flex-wrap: wrap !important;
-      }
-
-      /* عنصر العنوان المخصص للطباعة */
-      .print-title-bar {
-        display: block !important;
-        background: rgba(255,255,255,0.1) !important;
-        border: 1px solid rgba(255,255,255,0.2) !important;
-        border-radius: 12px !important;
-        padding: 12px 20px !important;
-        margin: 16px auto 0 !important;
-        max-width: 700px !important;
-        text-align: center !important;
-        font-size: 14px !important;
-        font-weight: 700 !important;
-        color: white !important;
-        line-height: 1.6 !important;
-        word-break: break-word !important;
-      }
-
-      /* إخفاء الـ paper-meta الأصلي في الطباعة واستبداله بجدول مبسط */
-      .paper-meta { display: none !important; }
-
-      .print-meta-row {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-        gap: 16px !important;
-        margin-top: 10px !important;
-      }
-
-      .print-meta-item {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        gap: 3px !important;
-      }
-
-      .print-meta-label {
-        font-size: 9px !important;
-        color: rgba(255,255,255,0.5) !important;
-        letter-spacing: 1.5px !important;
-        text-transform: uppercase !important;
-      }
-
-      .print-meta-val {
-        font-size: 13px !important;
-        color: white !important;
-        font-weight: 600 !important;
-      }
-      .meta-item.wide {
-        flex: 0 0 100% !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        border-bottom: 1px solid rgba(255,255,255,0.15) !important;
-        padding-bottom: 10px !important;
-        margin-bottom: 4px !important;
-      }
-
-      .meta-item.wide .meta-value,
-      #d-title {
-        font-size: 14px !important;
-        max-width: 100% !important;
-        width: 100% !important;
-        white-space: normal !important;
-        word-break: break-word !important;
-        overflow: visible !important;
-        text-overflow: unset !important;
-        line-height: 1.6 !important;
-        display: block !important;
-      }
-
-      /* Main container */
-      .container {
-        max-width: 100% !important;
-        padding: 20px 36px 0 !important;
-      }
-
-      /* Remove pseudo-element icons from panels */
-      .info-panel::after { display: none !important; }
-      .info-panel::before { display: none !important; }
-
-      /* Each panel */
-      .info-panel {
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-        margin-bottom: 14px !important;
-        padding: 20px 24px !important;
-        border-radius: 16px !important;
-      }
-
-      /* Remove decorative illustrations (the ::after emoji icons) */
-      .info-panel[data-icon]::after { content: none !important; }
-
-      /* Hide connectors */
-      .panel-connector { display: none !important; }
-
-      /* Footer */
-      footer {
-        background: var(--deep) !important;
-        padding: 20px 24px !important;
-        margin-top: 16px;
-        break-inside: avoid;
-      }
-
-      .footer-brand, .footer-sub, .footer-divider { display: none !important; }
-
-      /* Chips and badges */
-      .tool-chip { background: rgba(15,52,96,0.12) !important; border: 1.5px solid rgba(15,52,96,0.25) !important; }
-      .type-badge { background: var(--c4) !important; color: white !important; }
-      .q-num { background: var(--c1) !important; color: white !important; }
-      .q-display-item { background: rgba(233,69,96,0.06) !important; }
-
-      /* Panel backgrounds */
-      .panel-q      { background: #fff5f7 !important; border-color: #fecdd3 !important; }
-      .panel-sum    { background: #faf5ff !important; border-color: #e9d5ff !important; }
-      .panel-method { background: #f0f4ff !important; border-color: #c7d2fe !important; }
-      .panel-type   { background: #f0fdfc !important; border-color: #99f6e4 !important; }
-      .panel-result { background: #fffbeb !important; border-color: #fde68a !important; }
-      .panel-disc   { background: #f0fdf4 !important; border-color: #bbf7d0 !important; }
-
-      /* Panel tags */
-      .panel-tag { color: white !important; -webkit-print-color-adjust: exact !important; }
-      .panel-q .panel-tag      { background: var(--c1) !important; }
-      .panel-sum .panel-tag    { background: var(--c2) !important; }
-      .panel-method .panel-tag { background: var(--c3) !important; }
-      .panel-type .panel-tag   { background: var(--c4) !important; }
-      .panel-result .panel-tag { background: var(--c5) !important; }
-      .panel-disc .panel-tag   { background: var(--c6) !important; }
-
-      /* Hide the decorative background illustrations in panels */
-      .panel-q .panel-tag svg,
-      .info-panel img { display: none !important; }
-    }
-
-    /* ===== LANG TOGGLE ===== */
-    .lang-toggle {
-      position:fixed; top:20px; left:20px;
-      z-index:600;
-      display:flex; align-items:center; gap:0;
-      background:var(--deep);
-      border-radius:30px;
-      padding:4px;
-      box-shadow:0 4px 16px rgba(0,0,0,0.3);
-      border:1px solid rgba(255,255,255,0.1);
-    }
-    .lang-btn {
-      background:none; border:none; cursor:pointer;
-      font-family:'Cairo',sans-serif; font-size:12px; font-weight:700;
-      color:rgba(255,255,255,0.45);
-      padding:6px 14px; border-radius:24px;
-      transition:all 0.25s;
-      letter-spacing:0.5px;
-    }
-    .lang-btn.active {
-      background:var(--accent); color:white;
-      box-shadow:0 2px 8px rgba(233,69,96,0.4);
-    }
-    .lang-btn:hover:not(.active) { color:rgba(255,255,255,0.8); }
-
-    @media(max-width:620px){
-      .hero{padding:40px 20px 60px}
-      .paper-meta{flex-direction:column;align-items:center}
-      .meta-divider{display:none}
-      .steps-grid{grid-template-columns:1fr}
-      .modal-box{padding:24px 18px}
-      .field-group{grid-template-columns:1fr}
-      .info-panel{padding:28px 22px}
-    }
-  </style>
+  <link rel="stylesheet" href="assets/styles.css" />
 </head>
+
 <body>
+  <a class="skip-link" href="#content">تخطي إلى المحتوى</a>
 
-<!-- ===== MODAL ===== -->
-<div class="modal-overlay" id="modal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-badge">إدخال البيانات</div>
-      <h2 class="modal-title">بيانات الورقة العلمية</h2>
-      <p class="modal-subtitle">أدخل معلومات الورقة وستظهر في القالب مباشرةً</p>
-    </div>
-
-    <!-- معلومات أساسية -->
-    <div class="modal-section ms-basic">
-      <div class="modal-section-title" style="color:#374151">
-        <div class="dot" style="background:#9ca3af"></div>
-        المعلومات الأساسية
-      </div>
-      <div class="field-group full"><div class="field">
-        <label>عنوان الورقة <span>*</span></label>
-        <input type="text" id="f-title" placeholder="مثال: تأثير الذكاء الاصطناعي على التعليم" />
-      </div></div>
-      <div class="field-group">
-        <div class="field">
-          <label>اسم المؤلف <span>*</span></label>
-          <input type="text" id="f-author" placeholder="مثال: د. أحمد الشمري" />
-        </div>
-        <div class="field">
-          <label>سنة النشر</label>
-          <input type="text" id="f-year" placeholder="مثال: 2024" />
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="container topbar__row">
+      <div class="brand">
+        <div class="brand__mark" aria-hidden="true">PR</div>
+        <div class="brand__text">
+          <div class="brand__title">Paper Reading Protocol</div>
+          <div class="brand__subtitle">بروتوكول قراءة الأوراق العلمية</div>
         </div>
       </div>
-      <div class="field-group">
-        <div class="field">
-          <label>المجال البحثي</label>
-          <input type="text" id="f-field" placeholder="مثال: طب، هندسة، تربية..." />
-        </div>
-        <div class="field">
-          <label>المجلة / الناشر</label>
-          <input type="text" id="f-journal" placeholder="مثال: Nature, IEEE..." />
-        </div>
+
+      <nav class="nav" aria-label="التنقل الرئيسي">
+        <a href="#protocol">المنهج</a>
+        <a href="#steps">الخطوات</a>
+        <a href="#templates">القوالب</a>
+        <a href="#examples">أمثلة</a>
+        <a href="#about">عن الصفحة</a>
+      </nav>
+
+      <div class="actions">
+        <button class="btn btn--ghost" id="themeToggle" type="button" aria-label="تبديل الوضع الليلي">
+          الوضع
+        </button>
+        <a class="btn btn--primary" href="#templates">ابدأ بالقوالب</a>
       </div>
     </div>
+  </header>
 
-    <!-- سؤال البحث والمشكلة -->
-    <div class="modal-section ms-q">
-      <div class="modal-section-title">
-        <div class="dot" style="background:var(--c1)"></div>
-        سؤال البحث والمشكلة
-      </div>
-      <div class="field-group full"><div class="field">
-        <label>المشكلة البحثية</label>
-        <textarea id="f-problem" placeholder="ما المشكلة التي تعالجها الدراسة؟ ما الفجوة المعرفية التي تسدّها؟"></textarea>
-      </div></div>
-      <div class="field-group full">
-        <div class="field">
-          <label>الأسئلة البحثية</label>
-          <div class="questions-builder" id="q-builder">
-            <div class="q-row">
-              <input type="text" placeholder="السؤال الأول..." />
-              <button class="q-del" onclick="removeQ(this)">×</button>
+  <!-- Hero -->
+  <main id="content">
+    <section class="hero" id="protocol">
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <p class="pill">Academic • Practical • Shareable</p>
+          <h1 class="hero__title">
+            بروتوكول عملي لقراءة الأوراق العلمية
+            <span class="hero__titleEn" dir="ltr"> (10‑Step Protocol)</span>
+          </h1>
+
+          <p class="hero__lead">
+            هدف الصفحة: تساعدك تقرأ الورقة بسرعة <strong>من غير ما تختصرها بشكل مُخلّ</strong>:
+            سؤال البحث → المنهج → النتائج → النقد → التوصيات.
+          </p>
+
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="#steps">ابدأ بالخطوات</a>
+            <button class="btn btn--secondary" type="button" data-copy-target="#xThreadTemplate">
+              انسخ قالب ثريد X
+            </button>
+          </div>
+
+          <div class="hero__meta">
+            <div class="metaCard">
+              <div class="metaCard__k">مناسب لـ</div>
+              <div class="metaCard__v">طلاب دراسات عليا • باحثين • مهتمين بالمنهجية</div>
+            </div>
+            <div class="metaCard">
+              <div class="metaCard__k">منصات النشر</div>
+              <div class="metaCard__v"><a href="https://x.com/" target="_blank" rel="noreferrer">X</a> • <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a></div>
             </div>
           </div>
-          <button class="add-q-btn" onclick="addQuestion()">+ أضف سؤالاً بحثياً</button>
+
+          <p class="hero__note">
+            ملاحظة: المحتوى الأساسي للـ10 خطوات مستلهم من صفحتك الأصلية، لكن اتعاد تنظيمه بصريًا وتحويله لقوالب قابلة للنسخ والاستخدام.
+            <a href="https://sultan-ayed.github.io/A/" target="_blank" rel="noreferrer">المصدر</a>
+          </p>
+        </div>
+
+        <aside class="hero__panel" aria-label="ملخص سريع">
+          <div class="panel">
+            <h2 class="panel__title">ملخص سريع</h2>
+            <ul class="checklist">
+              <li>كل خطوة لها: هدف + سؤال + مخرجات</li>
+              <li>قوالب جاهزة للنشر عربي/إنجليزي</li>
+              <li>هيكل One‑Pager رسمي للأكاديميين</li>
+              <li>Graphical Abstract في صورة واحدة</li>
+            </ul>
+
+            <div class="divider"></div>
+
+            <div class="panel__mini">
+              <h3 class="panel__miniTitle">مخرجاتك بعد التطبيق</h3>
+              <ol class="miniSteps">
+                <li>ملاحظات منظمة للورقة</li>
+                <li>ملخص قابل للمشاركة</li>
+                <li>نقد منهجي مختصر</li>
+              </ol>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Steps -->
+    <section class="section" id="steps">
+      <div class="container">
+        <div class="section__head">
+          <div>
+            <h2 class="section__title">الخطوات العشر</h2>
+            <p class="section__subtitle">
+              كل خطوة: (هدف) → (سؤال) → (مخرجات). المحتوى مأخوذ من نسختك النصية الأصلية لكن بشكل قابل للتطبيق. 
+              <a href="https://sultan-ayed.github.io/A/" target="_blank" rel="noreferrer">Source</a>
+            </p>
+          </div>
+
+          <div class="section__tools">
+            <label class="field">
+              <span class="field__label">فلترة سريعة</span>
+              <input id="stepSearch" class="input" type="search" placeholder="ابحث: سؤال البحث، النتائج، المناقشة..." />
+            </label>
+          </div>
+        </div>
+
+        <div class="grid" id="stepsGrid" aria-live="polite">
+          <!-- Step 01 -->
+          <article class="card step" data-tags="مقدمة abstract">
+            <div class="step__top">
+              <div class="step__num">01</div>
+              <h3 class="step__title">
+                ابدأ بالمقدمة لا بالملخص
+                <span class="step__en" dir="ltr">Start with the Introduction</span>
+              </h3>
+            </div>
+            <p class="step__goal"><strong>الهدف:</strong> بناء فهم للسياق قبل التفاصيل.</p>
+            <p class="step__q"><strong>السؤال:</strong> ما المشكلة العامة ولماذا هي مهمة؟</p>
+            <p class="step__out"><strong>المخرجات:</strong> 3 جمل سياق + 1 جملة “لماذا الآن؟”.</p>
+            <details class="step__more">
+              <summary>ملاحظات تطبيقية</summary>
+              <ul>
+                <li>اكتب ما الذي تحاول الورقة تغييره في المجال.</li>
+                <li>حدد “ما قبل الورقة” و“ما بعدها”.</li>
+              </ul>
+            </details>
+          </article>
+
+          <!-- Step 02 -->
+          <article class="card step" data-tags="سؤال research question">
+            <div class="step__top">
+              <div class="step__num">02</div>
+              <h3 class="step__title">
+                حدّد السؤال الرئيسي
+                <span class="step__en" dir="ltr">Define the Main Research Question</span>
+              </h3>
+            </div>
+            <p class="step__goal"><strong>الهدف:</strong> استخراج جوهر الورقة في سطر واحد.</p>
+            <p class="step__q"><strong>السؤال:</strong> ما المشكلة التي يحاول المؤلفون حلها بدقة؟</p>
+            <p class="step__out"><strong>المخرجات:</strong> RQ sentence واحدة (AR/EN).</p>
+          </article>
+
+          <!-- Step 03 -->
+          <article class="card step" data-tags="سياق related work">
+            <div class="step__top">
+              <div class="step__num">03</div>
+              <h3 class="step__title">
+                لخّص السياق في 5 جمل
+                <span class="step__en" dir="ltr">Summarize Context in 5 Sentences</span>
+              </h3>
+            </div>
+            <p class="step__goal"><strong>الهدف:</strong> وضع الورقة داخل خريطة المجال.</p>
+            <p class="step__q"><strong>السؤال:</strong> ما الذي تم سابقًا؟ وما حدوده؟</p>
+            <p class="step__out"><strong>المخرجات:</strong> 5 جمل: (سابق)→(ثغرة)→(اقتراح)→(اختبار)→(نتيجة).</p>
+          </article>
+
+          <!-- Step 04 -->
+          <article class="card step" data-tags="أسئلة hypotheses">
+            <div class="step__top">
+              <div class="step__num">04</div>
+              <h3 class="step__title">
+                استخرج الأسئلة المحددة
+                <span class="step__en" dir="ltr">Extract Specific Questions</span>
+              </h3>
+            </div>
+            <p class="step__goal"><strong>الهدف:</strong> تحويل الورقة لقائمة Claims قابلة للفحص.</p>
+            <p class="step__q"><strong>السؤال:</strong> ما الأسئلة الفرعية/الفرضيات؟</p>
+            <p class="step__out"><strong>المخرجات:</strong> 3–5 أسئلة فرعية.</p>
+          </article>
+
+          <!-- Step 05 -->
+          <article class="card step" data-tags="منهج methodology">
+            <div class="step__top">
+              <div class="step__num">05</div>
+              <h3 class="step__title">
+                حدّد تركيز الورقة
+                <span class="step__en" dir="ltr">Identify the Core Method</span>
+              </h3>
+            </div>
+            <p class="step__goal"><strong>الهدف:</strong> فهم “ما الذي فُعل” لا “ما الذي قيل”.</p>
+            <p class="step__q"><strong>السؤال:</strong> ما المنهج/الأدوات/المتغيرات الأساسية؟</p>
+            <p class="step__out"><strong>المخرجات:</strong> 3 نقاط: Method + Data + Metrics.</p>
+          </article>
+
+          <!-- Step 06 -->
+          <article class="card step" data-tags="نتائج results figures tables">
+            <div class="step__top">
+              <div class="step__num">06</div>
+              <h3 class="step__title">
+                اقرأ النتائج وسجّلها
+                <span class="step__en" dir="ltr">Record Results Before Interpreting</span>
+              </h3>
+            </div>
+            <p class="step__goal"><strong>الهدف:</strong> رصد موضوعي بعيدًا عن التأويل.</p>
+            <p class="step__q"><strong>السؤال:</strong> ماذا تُظهر الأشكال/الجداول حرفيًا؟</p>
+            <p class="step__out"><strong>المخرجات:</strong> فقرة “وصف” لكل تجربة (بدون تفسير).</p>
+          </article>
+
+          <!-- Step 07 -->
+          <article class="card step" data-tags="تحليل interpretation">
+            <div class="step__top">
+              <div class="step__num">07</div>
+              <h3 class="step__title">
+                هل النتائج تجيب على الأسئلة؟
+                <span class="step__en" dir="ltr">Do Results Answer the Questions?</span>
+              </h3>
+            </div>
+            <p class="step__goal"><strong>الهدف:</strong> ربط النتائج مباشرة بـ RQ.</p>
+            <p class="step__q"><strong>السؤال:</strong> أي نتيجة تُجيب عن أي سؤال؟</p>
+            <p class="step__out"><strong>المخرجات:</strong> جدول ربط: (RQ/Sub‑Q) ← (Result figure/table).</p>
+          </article>
+
+          <!-- Step 08 -->
+          <article class="card step" data-tags="مناقشة discussion conclusion">
+            <div class="step__top">
+              <div class="step__num">08</div>
+              <h3 class="step__title">
+                اقرأ المناقشة والخاتمة
+                <span class="step__en" dir="ltr">Read Discussion & Conclusion</span>
+              </h3>
+            </div>
+            <p class="step__goal"><strong>الهدف:</strong> فهم تفسير المؤلفين ونقاط القوة/الضعف.</p>
+            <p class="step__q"><strong>السؤال:</strong> هل يوجد تفسير بديل لم يُذكر؟</p>
+            <p class="step__out"><strong>المخرجات:</strong> 2 نقاط: “يدّعون” + “يدعمونها بـ”.</p>
+          </article>
+
+          <!-- Step 09 -->
+          <article class="card step" data-tags="تحقق abstract">
+            <div class="step__top">
+              <div class="step__num">09</div>
+              <h3 class="step__title">
+                عد إلى الملخص الآن
+                <span class="step__en" dir="ltr">Return to the Abstract</span>
+              </h3>
+            </div>
+            <p class="step__goal"><strong>الهدف:</strong> التحقق من توافق الملخص مع ما قرأته.</p>
+            <p class="step__q"><strong>السؤال:</strong> هل الملخص عادل ودقيق؟</p>
+            <p class="step__out"><strong>المخرجات:</strong> سطر “ما الذي بالغ فيه الملخص؟”.</p>
+          </article>
+
+          <!-- Step 10 -->
+          <article class="card step" data-tags="سياق broader context">
+            <div class="step__top">
+              <div class="step__num">10</div>
+              <h3 class="step__title">
+                السياق الأوسع
+                <span class="step__en" dir="ltr">Place It in the Broader Literature</span>
+              </h3>
+            </div>
+            <p class="step__goal"><strong>الهدف:</strong> ربط الورقة بالعمل العلمي الأوسع.</p>
+            <p class="step__q"><strong>السؤال:</strong> ماذا يقول الآخرون؟ وما الخطوة التالية؟</p>
+            <p class="step__out"><strong>المخرجات:</strong> 3 مراجع مرتبطة + فكرة بحثية واحدة.</p>
+          </article>
+        </div>
+
+        <div class="callout">
+          <h3 class="callout__title">مبدأ ثابت</h3>
+          <p class="callout__text">
+            لا تُحوّل الورقة إلى “قصة” قبل ما تُحوّلها إلى “Claims + Evidence”.
+            بعد كده بس اكتب ملخصك للنشر.
+          </p>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- ملخص الورقة -->
-    <div class="modal-section ms-sum">
-      <div class="modal-section-title">
-        <div class="dot" style="background:var(--c2)"></div>
-        ملخص الورقة
-      </div>
-      <div class="field-group full"><div class="field">
-        <label>الملخص العام</label>
-        <textarea id="f-summary" placeholder="اكتب ملخصاً موجزاً للورقة — المشكلة والنتائج الرئيسية..." style="min-height:95px;"></textarea>
-      </div></div>
-    </div>
-
-    <!-- المنهجية والأدوات -->
-    <div class="modal-section ms-method">
-      <div class="modal-section-title">
-        <div class="dot" style="background:var(--c3)"></div>
-        المنهجية والأدوات
-      </div>
-      <div class="field-group full"><div class="field">
-        <label>المنهجية المستخدمة</label>
-        <textarea id="f-method" placeholder="كيف أجرى الباحثون الدراسة؟ ما المنهج المتبع؟" style="min-height:70px;"></textarea>
-      </div></div>
-      <div class="field-group full"><div class="field">
-        <label>الأدوات والتقنيات</label>
-        <input type="text" id="f-tools" placeholder="مثال: استبانة، مقابلات، برنامج SPSS، Python..." />
-        <small style="color:var(--muted);font-size:11px;margin-top:4px;">افصل بين الأدوات بفاصلة ،</small>
-      </div></div>
-    </div>
-
-    <!-- نوع الدراسة -->
-    <div class="modal-section ms-type">
-      <div class="modal-section-title">
-        <div class="dot" style="background:var(--c4)"></div>
-        نوع الدراسة
-      </div>
-      <div class="field-group">
-        <div class="field">
-          <label>نوع الدراسة</label>
-          <select id="f-studytype">
-            <option value="">اختر...</option>
-            <option>كمية</option>
-            <option>نوعية / كيفية</option>
-            <option>مختلطة</option>
-            <option>تجريبية</option>
-            <option>وصفية</option>
-            <option>مراجعة منهجية</option>
-            <option>تحليل ببليومتري</option>
-            <option>حالة دراسية</option>
-          </select>
+    <!-- Templates -->
+    <section class="section section--alt" id="templates">
+      <div class="container">
+        <div class="section__head">
+          <div>
+            <h2 class="section__title">قوالب جاهزة (Copy / Paste)</h2>
+            <p class="section__subtitle">
+              هنا هتلاقي قوالب للنشر على <a href="https://x.com/" target="_blank" rel="noreferrer">X</a> و<a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a>،
+              بالإضافة إلى قالب One‑Pager وقالب Graphical Abstract.
+            </p>
+          </div>
         </div>
-        <div class="field">
-          <label>حجم العينة / النطاق</label>
-          <input type="text" id="f-sample" placeholder="مثال: 200 طالب، بيانات 10 سنوات..." />
+
+        <div class="tabs" role="tablist" aria-label="قوالب">
+          <button class="tab is-active" role="tab" aria-selected="true" aria-controls="tab-x" id="tabBtn-x">X Thread</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="tab-li" id="tabBtn-li">LinkedIn Post</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="tab-one" id="tabBtn-one">One‑Pager</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="tab-ga" id="tabBtn-ga">Graphical Abstract</button>
+        </div>
+
+        <!-- Tab: X -->
+        <div class="tabPanel is-active" role="tabpanel" id="tab-x" aria-labelledby="tabBtn-x">
+          <div class="templateBox">
+            <div class="templateBox__head">
+              <h3 class="templateBox__title">قالب ثريد X (عربي/إنجليزي)</h3>
+              <div class="templateBox__actions">
+                <button class="btn btn--secondary" type="button" data-copy-target="#xThreadTemplate">نسخ</button>
+              </div>
+            </div>
+
+            <textarea id="xThreadTemplate" class="textarea" rows="12" spellcheck="false">
+T1) AR: عنوان الورقة + لماذا تهم؟
+    EN: Paper title + why it matters.
+
+T2) Problem:
+    AR: المشكلة في سطرين.
+    EN: 1–2 lines.
+
+T3) Research Question (RQ):
+    AR/EN: جملة واحدة.
+
+T4) Method:
+    AR: ما الذي فعله المؤلفون؟ (3 نقاط)
+    EN: 3 bullets.
+
+T5) Setup:
+    Dataset(s) + Baselines + Hardware/Edge (إن وجد).
+
+T6) Metrics:
+    2–3 metrics (AUC/F1/FPS/Latency/Privacy score…).
+
+T7) Results:
+    2–3 numbers + مقارنة baseline.
+
+T8) Limitations:
+    نقطتين بوضوح.
+
+T9) Takeaway:
+    جملة واحدة قابلة للاقتباس.
+
+T10) Link + سؤال للنقاش:
+     رابط الورقة + سؤال مفتوح.
+            </textarea>
+
+            <p class="fineprint">
+              نصيحة: أي ثريد بدون “Results بالأرقام” غالبًا ينتشر أقل داخل الأكاديميا.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tab: LinkedIn -->
+        <div class="tabPanel" role="tabpanel" id="tab-li" aria-labelledby="tabBtn-li" hidden>
+          <div class="templateBox">
+            <div class="templateBox__head">
+              <h3 class="templateBox__title">قالب LinkedIn (نص + مرفق PDF)</h3>
+              <div class="templateBox__actions">
+                <button class="btn btn--secondary" type="button" data-copy-target="#liTemplate">نسخ</button>
+              </div>
+            </div>
+
+            <textarea id="liTemplate" class="textarea" rows="10" spellcheck="false">
+[Hook]
+AR: في ورقة جديدة، المشكلة هي (…)، والهدف (…).
+EN: A new paper tackles (…), aiming to (…).
+
+[What they did]
+Method in 2–3 bullets.
+
+[What they found]
+2–3 key results (numbers) + مقارنة قصيرة.
+
+[Limitations]
+نقطتين.
+
+[Takeaway]
+جملة واحدة.
+
+Link: (ضع رابط الورقة)
+Hashtags: #Research #MachineLearning #ComputerVision
+            </textarea>
+
+            <p class="fineprint">
+              الأفضل ترفق One‑Pager (صفحة واحدة) كـ PDF — ده يرفع الحفظ والمشاركة.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tab: One-pager -->
+        <div class="tabPanel" role="tabpanel" id="tab-one" aria-labelledby="tabBtn-one" hidden>
+          <div class="twoCol">
+            <div class="templateBox">
+              <div class="templateBox__head">
+                <h3 class="templateBox__title">هيكل One‑Pager (صفحة واحدة)</h3>
+                <div class="templateBox__actions">
+                  <button class="btn btn--secondary" type="button" data-copy-target="#onePagerTemplate">نسخ</button>
+                </div>
+              </div>
+
+              <textarea id="onePagerTemplate" class="textarea" rows="14" spellcheck="false">
+Header:
+- Title (EN) + Title (AR short)
+- Venue/Year + Authors + DOI/URL
+
+Left column:
+- Problem (1 sentence)
+- RQ (1 sentence)
+- Method (3 bullets max)
+- Setup: dataset(s) + baselines + hardware (2 bullets)
+
+Right column:
+- Metrics (2–3 items)
+- Key results (2–3 numbers)
+- Limitations (2 bullets)
+- Takeaway (1 sentence)
+              </textarea>
+
+              <p class="fineprint">
+                قالب One‑Pager كـ “وثيقة” بيتداول بسهولة بين الباحثين.
+              </p>
+            </div>
+
+            <div class="templateBox">
+              <div class="templateBox__head">
+                <h3 class="templateBox__title">خانات تعبئة سريعة</h3>
+              </div>
+
+              <div class="fillGrid">
+                <div class="fillItem">
+                  <div class="fillItem__k">Citation</div>
+                  <div class="fillItem__v"><span dir="ltr">Venue, Year, Authors, DOI</span></div>
+                </div>
+                <div class="fillItem">
+                  <div class="fillItem__k">Problem</div>
+                  <div class="fillItem__v">سطر واحد</div>
+                </div>
+                <div class="fillItem">
+                  <div class="fillItem__k">RQ</div>
+                  <div class="fillItem__v">سطر واحد</div>
+                </div>
+                <div class="fillItem">
+                  <div class="fillItem__k">Method</div>
+                  <div class="fillItem__v">3 نقاط</div>
+                </div>
+                <div class="fillItem">
+                  <div class="fillItem__k">Results</div>
+                  <div class="fillItem__v">2–3 أرقام</div>
+                </div>
+                <div class="fillItem">
+                  <div class="fillItem__k">Limitations</div>
+                  <div class="fillItem__v">نقطتين</div>
+                </div>
+              </div>
+
+              <div class="noteBox">
+                لو تحب تضيف ملفات تنزيل فعلية (PDF/Docx)، حطّها داخل مجلد <code>/downloads</code> وحدث روابط الأزرار.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Graphical Abstract -->
+        <div class="tabPanel" role="tabpanel" id="tab-ga" aria-labelledby="tabBtn-ga" hidden>
+          <div class="templateBox">
+            <div class="templateBox__head">
+              <h3 class="templateBox__title">Graphical Abstract (قالب صورة واحدة)</h3>
+              <div class="templateBox__actions">
+                <button class="btn btn--secondary" type="button" data-copy-target="#gaTemplate">نسخ</button>
+              </div>
+            </div>
+
+            <textarea id="gaTemplate" class="textarea" rows="12" spellcheck="false">
+[Left] Input:
+- Data/Scenario (e.g., surveillance crowd video)
+
+[Center] Method:
+- Key idea (2–3 short phrases)
+- One visual pipeline arrow
+
+[Right] Output:
+- What improves? (privacy, accuracy, speed…)
+- One key number (best)
+- Constraint (small text): “within setup …”
+
+Rule:
+- Stand‑alone, minimal text, one key message.
+            </textarea>
+
+            <p class="fineprint">
+              الهدف: صورة “تتفهم في 5 ثواني” وتكون مستقلة بذاتها.
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- النتائج -->
-    <div class="modal-section ms-result">
-      <div class="modal-section-title">
-        <div class="dot" style="background:var(--c5)"></div>
-        النتائج الرئيسية
+    <!-- Examples -->
+    <section class="section" id="examples">
+      <div class="container">
+        <div class="section__head">
+          <div>
+            <h2 class="section__title">أمثلة تطبيقية</h2>
+            <p class="section__subtitle">
+              مثال سريع على تلخيص ورقة باسم <a href="https://www.ieee.org/" target="_blank" rel="noreferrer">IEEE</a> باستخدام الهيكل.  
+              الورقة: <a href="https://gensparkstorageprodwest.blob.core.windows.net/personal/e1203786-bc54-4f45-9c13-f12c5ba61e62/upload/default/fc907da0-8282-4cc8-85aa-72f62ffbe9b2?se=2026-03-04T05%3A34%3A21Z&sp=r&sv=2025-05-05&sr=b&rsct=application/pdf&sig=LzLZ61ZGkeNlmyytOfAPMD/bK3myiqNdzx5dMmK25pg%3D" target="_blank" rel="noreferrer">LA3D (PDF)</a>
+              [Source]
+            </p>
+          </div>
+        </div>
+
+        <div class="exampleGrid">
+          <article class="card example">
+            <h3 class="example__title">
+              <a href="https://gensparkstorageprodwest.blob.core.windows.net/personal/e1203786-bc54-4f45-9c13-f12c5ba61e62/upload/default/fc907da0-8282-4cc8-85aa-72f62ffbe9b2?se=2026-03-04T05%3A34%3A21Z&sp=r&sv=2025-05-05&sr=b&rsct=application/pdf&sig=LzLZ61ZGkeNlmyytOfAPMD/bK3myiqNdzx5dMmK25pg%3D" target="_blank" rel="noreferrer">LA3D</a> — ملخص منظم
+            </h3>
+
+            <div class="kv">
+              <div class="kv__k">Problem</div>
+              <div class="kv__v">
+                صعوبة تشغيل إخفاء الهوية بالزمن الحقيقي على أجهزة الحافة بسبب الكلفة الحوسبية ومخاوف الخصوصية. 
+              </div>
+            </div>
+
+            <div class="kv">
+              <div class="kv__k">RQ</div>
+              <div class="kv__v">
+                كيف نحمي خصوصية الأفراد في فيديوهات المراقبة مع الحفاظ على كفاءة كشف الشذوذ دون التأثير على سرعة الاستجابة؟
+              </div>
+            </div>
+
+            <div class="kv">
+              <div class="kv__k">Method</div>
+              <div class="kv__v">
+                <ul>
+                  <li><span dir="ltr">LA3D</span>: نهج خفيف وتكيفي.</li>
+                  <li>Dynamic Adjustment لتقليل الهدر في موارد الحوسبة.</li>
+                  <li>حماية كاملة للجسم مع الحفاظ على جودة البيانات اللازمة لـ <span dir="ltr">VAD</span>.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="kv">
+              <div class="kv__k">Evaluation</div>
+              <div class="kv__v">
+                تم التقييم باستخدام مجموعات بيانات عامة ومقارنة بطرق تقليدية وطرق تعلم عميق (حسب الملخص المتاح).
+              </div>
+            </div>
+
+            <div class="kv">
+              <div class="kv__k">Results</div>
+              <div class="kv__v">
+                النص المتاح لا يحتوي أرقام نتائج محددة؛ ضع هنا 2–3 أرقام عند توفر الورقة الكاملة (مثل <span dir="ltr">F1/AUC/FPS/Latency</span>).
+              </div>
+            </div>
+
+            <div class="kv">
+              <div class="kv__k">Takeaway</div>
+              <div class="kv__v">
+                النهج التكيفي الخفيف مناسب لأنظمة المراقبة الذكية خصوصًا حين تكون المعالجة الفورية على الحافة ضرورية.
+              </div>
+            </div>
+
+            <p class="fineprint">
+              المصدر: ملخص LA3D المتاح في الملف. 
+              <a href="https://gensparkstorageprodwest.blob.core.windows.net/personal/e1203786-bc54-4f45-9c13-f12c5ba61e62/upload/default/fc907da0-8282-4cc8-85aa-72f62ffbe9b2?se=2026-03-04T05%3A34%3A21Z&sp=r&sv=2025-05-05&sr=b&rsct=application/pdf&sig=LzLZ61ZGkeNlmyytOfAPMD/bK3myiqNdzx5dMmK25pg%3D" target="_blank" rel="noreferrer">Source</a>
+            </p>
+          </article>
+
+          <aside class="card note">
+            <h3 class="note__title">كيف تخلي المثال “ينتشر” أكاديميًا؟</h3>
+            <ol class="note__list">
+              <li>أضف أرقام (حتى رقمين) في قسم النتائج.</li>
+              <li>اذكر اسم الـdataset/الـbaseline إن وُجد.</li>
+              <li>أضف قيود (Limitations) نقطتين.</li>
+            </ol>
+            <div class="divider"></div>
+            <p class="note__text">
+              لو عندك الورقة الكاملة/DOI، ابعتهم وأنا أطلع لك نسخة One‑Pager “معبّأة بالأرقام” بنفس الهيكل.
+            </p>
+          </aside>
+        </div>
       </div>
-      <div class="field-group full"><div class="field">
-        <label>أبرز النتائج</label>
-        <textarea id="f-results" placeholder="ما أهم ما توصلت إليه الدراسة؟ أدرج النتائج الرئيسية..." style="min-height:90px;"></textarea>
-      </div></div>
-    </div>
+    </section>
 
-    <!-- المناقشة والاستنتاج -->
-    <div class="modal-section ms-disc">
-      <div class="modal-section-title">
-        <div class="dot" style="background:var(--c6)"></div>
-        المناقشة والاستنتاج
+    <!-- About -->
+    <section class="section section--alt" id="about">
+      <div class="container">
+        <div class="section__head">
+          <div>
+            <h2 class="section__title">عن الصفحة</h2>
+            <p class="section__subtitle">
+              الصفحة دي معمولة لتكون “مرجع تشغيل” مش مجرد مقال: خطوات + قوالب + مثال.
+              المحتوى الأساسي للخطوات مأخوذ من صفحتك الأصلية [Source](https://sultan-ayed.github.io/A/).
+            </p>
+          </div>
+        </div>
+
+        <div class="aboutGrid">
+          <div class="card">
+            <h3>ترخيص</h3>
+            <p>
+              يمكنك وضع ترخيص مفتوح (مثلاً MIT أو CC BY) حسب رغبتك.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>مساهمة</h3>
+            <p>
+              لو تبغى تضيف صفحة ثانية للأمثلة أو صفحة Download للقوالب، نفس الهوية دي هتخليك توسّع الموقع بسهولة.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>روابط</h3>
+            <ul>
+              <li><a href="https://pages.github.com/" target="_blank" rel="noreferrer">GitHub Pages</a></li>
+              <li><a href="https://x.com/" target="_blank" rel="noreferrer">X</a></li>
+              <li><a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <footer class="footer">
+          <p>
+            Built for academic clarity.  
+            Original steps source: <a href="https://sultan-ayed.github.io/A/" target="_blank" rel="noreferrer">sultan-ayed.github.io/A</a>
+          </p>
+        </footer>
       </div>
-      <div class="field-group full"><div class="field">
-        <label>المناقشة</label>
-        <textarea id="f-discussion" placeholder="كيف يفسر المؤلفون النتائج؟ ما السياق الأوسع؟" style="min-height:70px;"></textarea>
-      </div></div>
-      <div class="field-group full"><div class="field">
-        <label>الاستنتاج والتوصيات</label>
-        <textarea id="f-conclusion" placeholder="ما الاستنتاج النهائي؟ وما التوصيات أو الدراسات المستقبلية؟" style="min-height:70px;"></textarea>
-      </div></div>
-    </div>
+    </section>
+  </main>
 
-    <div class="modal-actions">
-      <button class="btn-submit" onclick="applyData()">✓ عرض في القالب</button>
-      <button class="btn-cancel" id="btn-cancel" onclick="closeModal()">إلغاء</button>
-    </div>
-  </div>
-</div>
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
 
-<!-- FAB -->
-<button class="fab" onclick="openModal()">✏️</button>
-<div class="fab-tip" id="fab-tip">تعديل بيانات الورقة</div>
-
-<!-- LANG TOGGLE -->
-<div class="lang-toggle">
-  <button class="lang-btn active" id="btn-ar" onclick="setLang('ar')">ع</button>
-  <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
-</div>
-
-<!-- HERO -->
-<header class="hero">
-  <div class="hero-eyebrow" style="font-size:16px; letter-spacing:1px; padding:8px 24px;">منهجية منظمة</div>
-  <p class="hero-sub" id="hero-sub-text" style="color:rgba(255,255,255,0.75); font-size:17px; margin-top:8px;">لقراءة المقالات البحثية بفاعلية وعمق</p>
-
-  <!-- عنصر مخصص للطباعة فقط -->
-  <div class="print-title-bar" id="print-title-bar" style="display:none"></div>
-  <div class="paper-meta">
-    <div class="meta-item wide">
-      <span class="meta-label">عنوان الورقة</span>
-      <span class="meta-value" id="d-title">—</span>
-    </div>
-    <div class="meta-divider"></div>
-    <div class="meta-item">
-      <span class="meta-label">المؤلف</span>
-      <span class="meta-value" id="d-author">—</span>
-    </div>
-    <div class="meta-divider"></div>
-    <div class="meta-item">
-      <span class="meta-label">السنة</span>
-      <span class="meta-value" id="d-year">—</span>
-    </div>
-    <div class="meta-divider"></div>
-    <div class="meta-item">
-      <span class="meta-label">المجال</span>
-      <span class="meta-value" id="d-field">—</span>
-    </div>
-    <div class="meta-divider"></div>
-    <div class="meta-item">
-      <span class="meta-label">المجلة</span>
-      <span class="meta-value" id="d-journal">—</span>
-    </div>
-  </div>
-</header>
-
-<!-- MAIN -->
-<main class="container">
-
-  <!-- Steps -->
-  <div id="steps-section">
-  <div class="section-label">
-    <span>خطوات القراءة المنهجية</span>
-    <div class="line"></div>
-  </div>
-  <div class="steps-grid">
-    <div class="step-card"><span class="step-num">الخطوة ٠١</span><span class="step-icon">📖</span><h3 class="step-title">ابدأ بالمقدمة لا بالملخص</h3><p class="step-body">الملخص هو الفقرة المكثّفة التي تبدأ بها كل مقالة. لا تبدأ به، بل اغمر نفسك في المقدمة أولاً لبناء فهم حقيقي.</p><span class="step-tag">نقطة انطلاق</span></div>
-    <div class="step-card"><span class="step-num">الخطوة ٠٢</span><span class="step-icon">🎯</span><h3 class="step-title">حدّد السؤال الرئيسي</h3><p class="step-body">ليس ما تدور حوله الورقة، بل ما المشكلة التي تحاول حلها؟ هذا هو جوهر كل بحث علمي.</p><span class="step-tag">السؤال المحوري</span></div>
-    <div class="step-card"><span class="step-num">الخطوة ٠٣</span><span class="step-icon">🗺️</span><h3 class="step-title">لخّص السياق في ٥ جمل</h3><p class="step-body">هل هناك أعمال سابقة؟ ما محدوداتها؟ ما الخطوات التالية؟ ضع الصورة الكاملة في مكانها.</p><span class="step-tag">الإطار العام</span></div>
-    <div class="step-card"><span class="step-num">الخطوة ٠٤</span><span class="step-icon">🔍</span><h3 class="step-title">استخرج الأسئلة المحددة</h3><p class="step-body">ما الذي يحاول المؤلفون الإجابة عليه بالضبط؟ قد تكون أسئلة متعددة أو فرضية صفرية واحدة. سجّلها.</p><span class="step-tag">الأسئلة البحثية</span></div>
-    <div class="step-card"><span class="step-num">الخطوة ٠٥</span><span class="step-icon">🔬</span><h3 class="step-title">حدّد تركيز الورقة</h3><p class="step-body">ماذا فعل المؤلفون لإجابة أسئلتهم؟ المنهجية، الأدوات، المتغيرات — ما الذي يُشكّل قلب الدراسة؟</p><span class="step-tag">المنهجية</span></div>
-    <div class="step-card"><span class="step-num">الخطوة ٠٦</span><span class="step-icon">📊</span><h3 class="step-title">اقرأ النتائج وسجّلها</h3><p class="step-body">لكل تجربة، لكل شكل، لكل جدول — اكتب فقرة تصف ما تراه. لا تحاول تفسيرها بعد.</p><span class="step-tag">الرصد الموضوعي</span></div>
-    <div class="step-card"><span class="step-num">الخطوة ٠٧</span><span class="step-icon">💡</span><h3 class="step-title">هل النتائج تجيب على الأسئلة؟</h3><p class="step-body">توقف وفكّر. ماذا تعني هذه النتائج؟ لا تتجاوز هذه المرحلة حتى تجيب بصدق على هذا السؤال.</p><span class="step-tag">التحليل الذاتي</span></div>
-    <div class="step-card"><span class="step-num">الخطوة ٠٨</span><span class="step-icon">💬</span><h3 class="step-title">اقرأ المناقشة والخاتمة</h3><p class="step-body">كيف يفسّر المؤلفون نتائجهم؟ هل تتفق معهم؟ هل ثمة تفسير بديل لم يطرحوه؟</p><span class="step-tag">النقد البنّاء</span></div>
-    <div class="step-card"><span class="step-num">الخطوة ٠٩</span><span class="step-icon">🔄</span><h3 class="step-title">عد إلى الملخص الآن</h3><p class="step-body">هل الملخص يتوافق مع ما قرأته فعلاً؟ هل يناسب تفسيرك الشخصي للورقة؟</p><span class="step-tag">التحقق النهائي</span></div>
-    <div class="step-card"><span class="step-num">الخطوة ١٠</span><span class="step-icon">🌐</span><h3 class="step-title">الخطوة الأخيرة: السياق الأوسع</h3><p class="step-body">ماذا يقول الباحثون الآخرون عن هذه الورقة؟ من الخبراء في هذا المجال؟ هل لديهم آراء لم تفكر فيها أنت؟</p><span class="step-tag">الحوار العلمي</span></div>
-  </div>
-  </div><!-- end steps-section -->
-
-  <!-- ======= ANALYSIS SECTIONS ======= -->
-  <div class="section-label" style="margin-bottom:32px;">
-    <span>تحليل الورقة</span>
-    <div class="line"></div>
-  </div>
-
-  <!-- 1. سؤال البحث والمشكلة -->
-  <div class="info-panel panel-q" data-icon="❓">
-    <div class="panel-tag">🔴 سؤال البحث والمشكلة</div>
-    <div class="panel-title" id="d-problem-title">المشكلة البحثية</div>
-    <div class="panel-content" id="d-problem">
-      <span class="placeholder">لم تُدخل المشكلة البحثية بعد — اضغط ✏️</span>
-    </div>
-    <div id="d-questions-wrap" style="margin-top:18px; display:none;">
-      <div style="font-size:11px;font-weight:800;letter-spacing:2px;color:var(--c1);margin-bottom:10px;">الأسئلة البحثية</div>
-      <div class="q-display-list" id="d-questions"></div>
-    </div>
-  </div>
-
-  <!-- connector -->
-  <div class="panel-connector">
-    <svg width="24" height="32" viewBox="0 0 24 32"><line x1="12" y1="0" x2="12" y2="32" stroke="#d1d5db" stroke-width="2" stroke-dasharray="4 3"/><polygon points="6,26 12,34 18,26" fill="#d1d5db"/></svg>
-  </div>
-
-  <!-- 2. ملخص -->
-  <div class="info-panel panel-sum" data-icon="📋">
-    <div class="panel-tag">🟣 ملخص الورقة</div>
-    <div class="panel-content" id="d-summary">
-      <span class="placeholder">لم تُدخل الملخص بعد — اضغط ✏️</span>
-    </div>
-  </div>
-
-  <!-- connector -->
-  <div class="panel-connector">
-    <svg width="24" height="32" viewBox="0 0 24 32"><line x1="12" y1="0" x2="12" y2="32" stroke="#d1d5db" stroke-width="2" stroke-dasharray="4 3"/><polygon points="6,26 12,34 18,26" fill="#d1d5db"/></svg>
-  </div>
-
-  <!-- 3. المنهجية والأدوات -->
-  <div class="info-panel panel-method" data-icon="🔬">
-    <div class="panel-tag">🔵 المنهجية والأدوات</div>
-    <div class="panel-content" id="d-method">
-      <span class="placeholder">لم تُدخل المنهجية بعد — اضغط ✏️</span>
-    </div>
-    <div id="d-tools-wrap" style="margin-top:16px; display:none;">
-      <div style="font-size:11px;font-weight:800;letter-spacing:2px;color:var(--c3);margin-bottom:10px;">الأدوات والتقنيات</div>
-      <div class="tools-chips" id="d-tools"></div>
-    </div>
-  </div>
-
-  <!-- connector -->
-  <div class="panel-connector">
-    <svg width="24" height="32" viewBox="0 0 24 32"><line x1="12" y1="0" x2="12" y2="32" stroke="#d1d5db" stroke-width="2" stroke-dasharray="4 3"/><polygon points="6,26 12,34 18,26" fill="#d1d5db"/></svg>
-  </div>
-
-  <!-- 4. نوع الدراسة -->
-  <div class="info-panel panel-type" data-icon="🗂️">
-    <div class="panel-tag">🟢 نوع الدراسة</div>
-    <div class="panel-content" id="d-type-wrap">
-      <span class="placeholder">لم تُدخل نوع الدراسة بعد — اضغط ✏️</span>
-    </div>
-  </div>
-
-  <!-- connector -->
-  <div class="panel-connector">
-    <svg width="24" height="32" viewBox="0 0 24 32"><line x1="12" y1="0" x2="12" y2="32" stroke="#d1d5db" stroke-width="2" stroke-dasharray="4 3"/><polygon points="6,26 12,34 18,26" fill="#d1d5db"/></svg>
-  </div>
-
-  <!-- 5. النتائج -->
-  <div class="info-panel panel-result" data-icon="📊">
-    <div class="panel-tag">🟡 النتائج الرئيسية</div>
-    <div class="panel-content" id="d-results">
-      <span class="placeholder">لم تُدخل النتائج بعد — اضغط ✏️</span>
-    </div>
-  </div>
-
-  <!-- connector -->
-  <div class="panel-connector">
-    <svg width="24" height="32" viewBox="0 0 24 32"><line x1="12" y1="0" x2="12" y2="32" stroke="#d1d5db" stroke-width="2" stroke-dasharray="4 3"/><polygon points="6,26 12,34 18,26" fill="#d1d5db"/></svg>
-  </div>
-
-  <!-- 6. مناقشة واستنتاج -->
-  <div class="info-panel panel-disc" data-icon="💬">
-    <div class="panel-tag">🟢 المناقشة والاستنتاج</div>
-    <div class="panel-content" id="d-discussion">
-      <span class="placeholder">لم تُدخل المناقشة بعد — اضغط ✏️</span>
-    </div>
-    <div id="d-conclusion-wrap" style="margin-top:20px; display:none;">
-      <div style="font-size:11px;font-weight:800;letter-spacing:2px;color:var(--c6);margin-bottom:10px;">الاستنتاج والتوصيات</div>
-      <div id="d-conclusion" style="font-size:15px;color:var(--ink);line-height:2;"></div>
-    </div>
-  </div>
-
-
-
-</main>
-
-<footer>
-  <div class="footer-owner">
-    <div class="owner-name">سلطان بن عايد</div>
-    <a href="https://sultan-ayed.github.io/my/" target="_blank" class="owner-link">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-      sultan-ayed.github.io/my
-    </a>
-  </div>
-  <div class="footer-divider"></div>
-  <div class="footer-brand" id="footer-brand-text">القراءة العلمية المنهجية</div>
-  <div class="footer-sub" id="footer-sub-text">هويتك البصرية في رحلة البحث العلمي</div>
-</footer>
-
-<!-- PDF BUTTON -->
-<button class="pdf-btn" id="pdf-btn" onclick="savePDF()">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-  <span id="pdf-btn-text">حفظ PDF</span>
-</button>
-
-<script>
-  const AR = ['١','٢','٣','٤','٥','٦','٧','٨','٩','١٠'];
-  let currentLang = 'ar';
-
-  // ===== TRANSLATIONS =====
-  const T = {
-    ar: {
-      dir: 'rtl', htmlLang: 'ar',
-      pageTitle: 'دليل قراءة الورقة العلمية',
-      eyebrow: 'منهجية منظمة',
-      heroSub: 'لقراءة المقالات البحثية بفاعلية وعمق',
-      metaTitle: 'عنوان الورقة', metaAuthor: 'المؤلف', metaYear: 'السنة',
-      metaField: 'المجال', metaJournal: 'المجلة',
-      fabTip: 'تعديل بيانات الورقة',
-      modalBadge: 'إدخال البيانات',
-      modalTitle: 'بيانات الورقة العلمية',
-      modalSub: 'أدخل معلومات الورقة وستظهر في القالب مباشرةً',
-      secBasic: 'المعلومات الأساسية',
-      lTitle: 'عنوان الورقة', pTitle: 'مثال: تأثير الذكاء الاصطناعي على التعليم',
-      lAuthor: 'اسم المؤلف', pAuthor: 'مثال: د. أحمد الشمري',
-      lYear: 'سنة النشر', pYear: 'مثال: 2024',
-      lField: 'المجال البحثي', pField: 'مثال: طب، هندسة، تربية...',
-      lJournal: 'المجلة / الناشر', pJournal: 'مثال: Nature, IEEE...',
-      secQ: 'سؤال البحث والمشكلة',
-      lProblem: 'المشكلة البحثية', pProblem: 'ما المشكلة التي تعالجها الدراسة؟ ما الفجوة المعرفية التي تسدّها؟',
-      lQuestions: 'الأسئلة البحثية', pQ1: 'السؤال الأول...', pQN: 'أدخل سؤالاً بحثياً...',
-      addQ: '+ أضف سؤالاً بحثياً',
-      secSum: 'ملخص الورقة',
-      lSummary: 'الملخص العام', pSummary: 'اكتب ملخصاً موجزاً للورقة — المشكلة والنتائج الرئيسية...',
-      secMethod: 'المنهجية والأدوات',
-      lMethod: 'المنهجية المستخدمة', pMethod: 'كيف أجرى الباحثون الدراسة؟ ما المنهج المتبع؟',
-      lTools: 'الأدوات والتقنيات', pTools: 'مثال: استبانة، مقابلات، برنامج SPSS، Python...',
-      toolsHint: 'افصل بين الأدوات بفاصلة ،',
-      secType: 'نوع الدراسة',
-      lStudyType: 'نوع الدراسة',
-      studyTypes: ['','كمية','نوعية / كيفية','مختلطة','تجريبية','وصفية','مراجعة منهجية','تحليل ببليومتري','حالة دراسية'],
-      lSample: 'حجم العينة / النطاق', pSample: 'مثال: 200 طالب، بيانات 10 سنوات...',
-      secResult: 'النتائج الرئيسية',
-      lResults: 'أبرز النتائج', pResults: 'ما أهم ما توصلت إليه الدراسة؟ أدرج النتائج الرئيسية...',
-      secDisc: 'المناقشة والاستنتاج',
-      lDiscussion: 'المناقشة', pDiscussion: 'كيف يفسر المؤلفون النتائج؟ ما السياق الأوسع؟',
-      lConclusion: 'الاستنتاج والتوصيات', pConclusion: 'ما الاستنتاج النهائي؟ وما التوصيات أو الدراسات المستقبلية؟',
-      btnSubmit: '✓ عرض في القالب', btnCancel: 'إلغاء',
-      stepsLabel: 'خطوات القراءة المنهجية',
-      analysisLabel: 'تحليل الورقة',
-      panelQ: '🔴 سؤال البحث والمشكلة',
-      panelQSub: 'الأسئلة البحثية',
-      phProblem: 'لم تُدخل المشكلة البحثية بعد — اضغط ✏️',
-      panelSum: '🟣 ملخص الورقة',
-      phSummary: 'لم تُدخل الملخص بعد — اضغط ✏️',
-      panelMethod: '🔵 المنهجية والأدوات',
-      panelMethodSub: 'الأدوات والتقنيات',
-      phMethod: 'لم تُدخل المنهجية بعد — اضغط ✏️',
-      panelType: '🟢 نوع الدراسة',
-      phType: 'لم تُدخل نوع الدراسة بعد — اضغط ✏️',
-      sampleLabel: 'العينة / النطاق: ',
-      panelResult: '🟡 النتائج الرئيسية',
-      phResults: 'لم تُدخل النتائج بعد — اضغط ✏️',
-      panelDisc: '🟢 المناقشة والاستنتاج',
-      panelDiscSub: 'الاستنتاج والتوصيات',
-      phDiscussion: 'لم تُدخل المناقشة بعد — اضغط ✏️',
-      notesTitle: 'ملاحظاتي الشخصية',
-      footerBrand: 'القراءة العلمية المنهجية',
-      footerSub: 'هويتك البصرية في رحلة البحث العلمي',
-      pdfBtn: 'حفظ PDF',
-      steps: [
-        {num:'الخطوة ٠١', icon:'📖', title:'ابدأ بالمقدمة لا بالملخص', body:'الملخص هو الفقرة المكثّفة التي تبدأ بها كل مقالة. لا تبدأ به، بل اغمر نفسك في المقدمة أولاً لبناء فهم حقيقي.', tag:'نقطة انطلاق'},
-        {num:'الخطوة ٠٢', icon:'🎯', title:'حدّد السؤال الرئيسي', body:'ليس ما تدور حوله الورقة، بل ما المشكلة التي تحاول حلها؟ هذا هو جوهر كل بحث علمي.', tag:'السؤال المحوري'},
-        {num:'الخطوة ٠٣', icon:'🗺️', title:'لخّص السياق في ٥ جمل', body:'هل هناك أعمال سابقة؟ ما محدوداتها؟ ما الخطوات التالية؟ ضع الصورة الكاملة في مكانها.', tag:'الإطار العام'},
-        {num:'الخطوة ٠٤', icon:'🔍', title:'استخرج الأسئلة المحددة', body:'ما الذي يحاول المؤلفون الإجابة عليه بالضبط؟ قد تكون أسئلة متعددة أو فرضية صفرية واحدة. سجّلها.', tag:'الأسئلة البحثية'},
-        {num:'الخطوة ٠٥', icon:'🔬', title:'حدّد تركيز الورقة', body:'ماذا فعل المؤلفون لإجابة أسئلتهم؟ المنهجية، الأدوات، المتغيرات — ما الذي يُشكّل قلب الدراسة؟', tag:'المنهجية'},
-        {num:'الخطوة ٠٦', icon:'📊', title:'اقرأ النتائج وسجّلها', body:'لكل تجربة، لكل شكل، لكل جدول — اكتب فقرة تصف ما تراه. لا تحاول تفسيرها بعد.', tag:'الرصد الموضوعي'},
-        {num:'الخطوة ٠٧', icon:'💡', title:'هل النتائج تجيب على الأسئلة؟', body:'توقف وفكّر. ماذا تعني هذه النتائج؟ لا تتجاوز هذه المرحلة حتى تجيب بصدق على هذا السؤال.', tag:'التحليل الذاتي'},
-        {num:'الخطوة ٠٨', icon:'💬', title:'اقرأ المناقشة والخاتمة', body:'كيف يفسّر المؤلفون نتائجهم؟ هل تتفق معهم؟ هل ثمة تفسير بديل لم يطرحوه؟', tag:'النقد البنّاء'},
-        {num:'الخطوة ٠٩', icon:'🔄', title:'عد إلى الملخص الآن', body:'هل الملخص يتوافق مع ما قرأته فعلاً؟ هل يناسب تفسيرك الشخصي للورقة؟', tag:'التحقق النهائي'},
-        {num:'الخطوة ١٠', icon:'🌐', title:'الخطوة الأخيرة: السياق الأوسع', body:'ماذا يقول الباحثون الآخرون عن هذه الورقة؟ من الخبراء في هذا المجال؟ هل لديهم آراء لم تفكر فيها أنت؟', tag:'الحوار العلمي'},
-      ]
-    },
-    en: {
-      dir: 'ltr', htmlLang: 'en',
-      pageTitle: 'How to Read a Scientific Paper',
-      eyebrow: 'Scientific Reading Guide',
-      heroSub: 'A structured methodology for reading research articles effectively and deeply',
-      metaTitle: 'Paper Title', metaAuthor: 'Author', metaYear: 'Year',
-      metaField: 'Field', metaJournal: 'Journal',
-      fabTip: 'Edit paper data',
-      modalBadge: 'Enter Data',
-      modalTitle: 'Scientific Paper Details',
-      modalSub: 'Fill in the paper details and they will appear in the template instantly',
-      secBasic: 'Basic Information',
-      lTitle: 'Paper Title', pTitle: 'e.g. The Impact of AI on Education',
-      lAuthor: 'Author Name', pAuthor: 'e.g. Dr. John Smith',
-      lYear: 'Year of Publication', pYear: 'e.g. 2024',
-      lField: 'Research Field', pField: 'e.g. Medicine, Engineering, Education...',
-      lJournal: 'Journal / Publisher', pJournal: 'e.g. Nature, IEEE...',
-      secQ: 'Research Question & Problem',
-      lProblem: 'Research Problem', pProblem: 'What problem does this study address? What knowledge gap does it fill?',
-      lQuestions: 'Research Questions', pQ1: 'First question...', pQN: 'Enter a research question...',
-      addQ: '+ Add a research question',
-      secSum: 'Paper Summary',
-      lSummary: 'General Summary', pSummary: 'Write a brief summary — the problem and key findings...',
-      secMethod: 'Methodology & Tools',
-      lMethod: 'Methodology Used', pMethod: 'How did the researchers conduct the study? What approach was used?',
-      lTools: 'Tools & Technologies', pTools: 'e.g. Survey, Interviews, SPSS, Python...',
-      toolsHint: 'Separate tools with a comma ,',
-      secType: 'Study Type',
-      lStudyType: 'Study Type',
-      studyTypes: ['','Quantitative','Qualitative','Mixed Methods','Experimental','Descriptive','Systematic Review','Bibliometric Analysis','Case Study'],
-      lSample: 'Sample Size / Scope', pSample: 'e.g. 200 students, 10 years of data...',
-      secResult: 'Key Findings',
-      lResults: 'Main Results', pResults: 'What are the most important findings of the study?',
-      secDisc: 'Discussion & Conclusion',
-      lDiscussion: 'Discussion', pDiscussion: 'How do the authors interpret the findings? What is the broader context?',
-      lConclusion: 'Conclusion & Recommendations', pConclusion: 'What is the final conclusion? What are the recommendations or future research directions?',
-      btnSubmit: '✓ Apply to Template', btnCancel: 'Cancel',
-      stepsLabel: 'Systematic Reading Steps',
-      analysisLabel: 'Paper Analysis',
-      panelQ: '🔴 Research Question & Problem',
-      panelQSub: 'Research Questions',
-      phProblem: 'No research problem entered yet — press ✏️',
-      panelSum: '🟣 Paper Summary',
-      phSummary: 'No summary entered yet — press ✏️',
-      panelMethod: '🔵 Methodology & Tools',
-      panelMethodSub: 'Tools & Technologies',
-      phMethod: 'No methodology entered yet — press ✏️',
-      panelType: '🟢 Study Type',
-      phType: 'No study type entered yet — press ✏️',
-      sampleLabel: 'Sample / Scope: ',
-      panelResult: '🟡 Key Findings',
-      phResults: 'No results entered yet — press ✏️',
-      panelDisc: '🟢 Discussion & Conclusion',
-      panelDiscSub: 'Conclusion & Recommendations',
-      phDiscussion: 'No discussion entered yet — press ✏️',
-      notesTitle: 'My Personal Notes',
-      footerBrand: 'Systematic Scientific Reading',
-      footerSub: 'Your visual identity in the research journey',
-      pdfBtn: 'Save PDF',
-      steps: [
-        {num:'Step 01', icon:'📖', title:'Start with the Introduction, not the Abstract', body:'The abstract is the dense paragraph that opens every paper. Skip it first — immerse yourself in the introduction to build real understanding.', tag:'Starting Point'},
-        {num:'Step 02', icon:'🎯', title:'Identify the Main Question', body:"It's not about what the paper is about, but what problem it's trying to solve. That is the core of every scientific study.", tag:'Central Question'},
-        {num:'Step 03', icon:'🗺️', title:'Summarize the Context in 5 Sentences', body:'Are there prior works? What are their limitations? What are the next steps? Put the full picture in place.', tag:'General Framework'},
-        {num:'Step 04', icon:'🔍', title:'Extract the Specific Questions', body:'What exactly are the authors trying to answer? There may be multiple questions or a single null hypothesis. Write them down.', tag:'Research Questions'},
-        {num:'Step 05', icon:'🔬', title:'Identify the Focus of the Paper', body:'What did the authors do to answer their questions? The methodology, tools, variables — what forms the heart of this study?', tag:'Methodology'},
-        {num:'Step 06', icon:'📊', title:'Read the Results and Record Them', body:'For each experiment, figure, and table — write a paragraph describing what you see. Don\'t try to interpret yet.', tag:'Objective Observation'},
-        {num:'Step 07', icon:'💡', title:'Do the Results Answer the Questions?', body:'Stop and think. What do these results mean? Don\'t move forward until you honestly answer this question.', tag:'Self-Analysis'},
-        {num:'Step 08', icon:'💬', title:'Read the Discussion & Conclusion', body:'How do the authors interpret their results? Do you agree? Is there an alternative explanation they haven\'t considered?', tag:'Constructive Critique'},
-        {num:'Step 09', icon:'🔄', title:'Return to the Abstract Now', body:'Does the abstract match what you actually read? Does it fit your personal interpretation of the paper?', tag:'Final Verification'},
-        {num:'Step 10', icon:'🌐', title:'Last Step: The Broader Context', body:'What do other researchers say about this paper? Who are the experts in this field? Do they have opinions you haven\'t considered?', tag:'Scientific Dialogue'},
-      ]
-    }
-  };
-
-  // ===== LANGUAGE SWITCHER =====
-  function setLang(lang) {
-    currentLang = lang;
-    const t = T[lang];
-    const html = document.documentElement;
-    html.setAttribute('lang', t.htmlLang);
-    html.setAttribute('dir', t.dir);
-    document.body.style.fontFamily = lang === 'ar' ? "'Cairo', sans-serif" : "'Cairo', sans-serif";
-
-    // toggle buttons
-    document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
-    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-
-    // fab tip
-    document.getElementById('fab-tip').textContent = t.fabTip;
-
-    // Hero
-    document.querySelector('.hero-eyebrow').textContent = t.eyebrow;
-    document.getElementById('hero-sub-text').textContent = t.heroSub;
-    document.getElementById('hero-sub-text').style.color = 'rgba(255,255,255,0.75)';
-
-    // Meta labels
-    const metaLabels = document.querySelectorAll('.meta-label');
-    const metaKeys = ['metaTitle','metaAuthor','metaYear','metaField','metaJournal'];
-    metaLabels.forEach((el, i) => { if(metaKeys[i]) el.textContent = t[metaKeys[i]]; });
-
-    // Modal
-    document.querySelector('.modal-badge').textContent = t.modalBadge;
-    document.querySelector('.modal-title').textContent = t.modalTitle;
-    document.querySelector('.modal-subtitle').textContent = t.modalSub;
-
-    // Modal section titles
-    const secTitles = document.querySelectorAll('.modal-section-title');
-    const secKeys = ['secBasic','secQ','secSum','secMethod','secType','secResult','secDisc'];
-    secTitles.forEach((el, i) => {
-      const dot = el.querySelector('.dot');
-      el.textContent = t[secKeys[i]] || el.textContent;
-      if (dot) el.insertBefore(dot, el.firstChild);
-    });
-
-    // Form labels & placeholders
-    const fields = [
-      ['f-title', 'lTitle','pTitle'], ['f-author','lAuthor','pAuthor'],
-      ['f-year','lYear','pYear'], ['f-field','lField','pField'],
-      ['f-journal','lJournal','pJournal'], ['f-problem','lProblem','pProblem'],
-      ['f-summary','lSummary','pSummary'], ['f-method','lMethod','pMethod'],
-      ['f-tools','lTools','pTools'], ['f-sample','lSample','pSample'],
-      ['f-results','lResults','pResults'], ['f-discussion','lDiscussion','pDiscussion'],
-      ['f-conclusion','lConclusion','pConclusion'],
-    ];
-    fields.forEach(([id, lKey, pKey]) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.placeholder = t[pKey] || '';
-      const label = el.closest('.field')?.querySelector('label');
-      if (label) {
-        const span = label.querySelector('span');
-        label.textContent = t[lKey] || '';
-        if (span) label.appendChild(span);
-      }
-    });
-
-    // Questions label
-    const qLabel = document.querySelector('#q-builder')?.closest('.field')?.querySelector('label');
-    if (qLabel) qLabel.textContent = t.lQuestions;
-    document.querySelector('.add-q-btn').textContent = t.addQ;
-    document.querySelector('#q-builder .q-row input').placeholder = t.pQ1;
-
-    // Tools hint
-    const hint = document.getElementById('f-tools')?.closest('.field')?.querySelector('small');
-    if (hint) hint.textContent = t.toolsHint;
-
-    // Study type options
-    const sel = document.getElementById('f-studytype');
-    if (sel) {
-      const cur = sel.value;
-      sel.innerHTML = t.studyTypes.map((v,i) => `<option value="${v}">${v || (lang==='ar'?'اختر...':'Select...')}</option>`).join('');
-    }
-
-    // Buttons
-    document.querySelector('.btn-submit').textContent = t.btnSubmit;
-    document.getElementById('btn-cancel').textContent = t.btnCancel;
-
-    // Section labels in page
-    const sectionSpans = document.querySelectorAll('.section-label span');
-    if (sectionSpans[0]) sectionSpans[0].textContent = t.stepsLabel;
-    if (sectionSpans[1]) sectionSpans[1].textContent = t.analysisLabel;
-
-    // Panel tags
-    const panelTags = document.querySelectorAll('.panel-tag');
-    const panelTagKeys = ['panelQ','panelSum','panelMethod','panelType','panelResult','panelDisc'];
-    panelTags.forEach((el,i) => { if(panelTagKeys[i]) el.textContent = t[panelTagKeys[i]]; });
-
-    // Panel sub-labels
-    const qSubLabel = document.querySelector('#d-questions-wrap > div');
-    if (qSubLabel) qSubLabel.textContent = t.panelQSub;
-    const toolsSubLabel = document.querySelector('#d-tools-wrap > div');
-    if (toolsSubLabel) toolsSubLabel.textContent = t.panelMethodSub;
-    const discSubLabel = document.querySelector('#d-conclusion-wrap > div');
-    if (discSubLabel) discSubLabel.textContent = t.panelDiscSub;
-
-    // Notes title
-    document.querySelector('.notes-title').innerHTML = t.notesTitle;
-
-    // Footer
-    document.getElementById('footer-brand-text').textContent = t.footerBrand;
-    document.getElementById('footer-sub-text').textContent = t.footerSub;
-
-    // PDF button
-    document.getElementById('pdf-btn-text').textContent = t.pdfBtn;
-
-    // Rebuild steps
-    const grid = document.querySelector('.steps-grid');
-    if (grid) {
-      grid.innerHTML = t.steps.map((s,i) =>
-        `<div class="step-card" style="animation-delay:${(i+1)*0.05}s">
-          <span class="step-num">${s.num}</span>
-          <span class="step-icon">${s.icon}</span>
-          <h3 class="step-title">${s.title}</h3>
-          <p class="step-body">${s.body}</p>
-          <span class="step-tag">${s.tag}</span>
-        </div>`
-      ).join('');
-    }
-
-    // Update placeholders in display panels (only if they still show placeholder)
-    const phMap = [
-      ['d-problem', t.phProblem],
-      ['d-summary', t.phSummary],
-      ['d-method',  t.phMethod],
-      ['d-results', t.phResults],
-      ['d-discussion', t.phDiscussion],
-    ];
-    phMap.forEach(([id, ph]) => {
-      const el = document.getElementById(id);
-      if (el?.querySelector('.placeholder')) {
-        el.innerHTML = `<span class="placeholder">${ph}</span>`;
-      }
-    });
-    const typeWrap = document.getElementById('d-type-wrap');
-    if (typeWrap?.querySelector('.placeholder')) {
-      typeWrap.innerHTML = `<span class="placeholder">${t.phType}</span>`;
-    }
-  }
-
-  // ===== MODAL =====
-  function openModal() {
-    document.getElementById('modal').classList.remove('hidden');
-    document.getElementById('btn-cancel').style.display = 'block';
-  }
-  function closeModal() {
-    document.getElementById('modal').classList.add('hidden');
-  }
-  function addQuestion() {
-    const b = document.getElementById('q-builder');
-    const row = document.createElement('div');
-    row.className = 'q-row';
-    row.innerHTML = `<input type="text" placeholder="${T[currentLang].pQN}" /><button class="q-del" onclick="removeQ(this)">×</button>`;
-    b.appendChild(row);
-  }
-  function removeQ(btn) {
-    const b = document.getElementById('q-builder');
-    if (b.children.length > 1) btn.parentElement.remove();
-    else btn.previousElementSibling.value = '';
-  }
-
-  function setHTML(id, val, placeholder) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    if (val) el.innerHTML = val.replace(/\n/g,'<br>');
-    else el.innerHTML = `<span class="placeholder">${placeholder}</span>`;
-  }
-  function setText(id, val) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = val || '—';
-  }
-
-  function applyData() {
-    const t = T[currentLang];
-    const get = id => document.getElementById(id).value.trim();
-
-    const title      = get('f-title');
-    const author     = get('f-author');
-    const year       = get('f-year');
-    const field      = get('f-field');
-    const journal    = get('f-journal');
-    const problem    = get('f-problem');
-    const summary    = get('f-summary');
-    const method     = get('f-method');
-    const tools      = get('f-tools');
-    const studytype  = get('f-studytype');
-    const sample     = get('f-sample');
-    const results    = get('f-results');
-    const discussion = get('f-discussion');
-    const conclusion = get('f-conclusion');
-
-    setText('d-title',   title);
-    setText('d-author',  author);
-    setText('d-year',    year);
-    setText('d-field',   field);
-    setText('d-journal', journal);
-    if (title) document.title = title + (currentLang==='ar' ? ' — دليل القراءة العلمية' : ' — Scientific Reading Guide');
-
-    // تحديث عنصر الطباعة
-    const ptb = document.getElementById('print-title-bar');
-    if (ptb) {
-      const t2 = T[currentLang];
-      let html = title ? `<div style="font-size:15px;font-weight:800;color:white;margin-bottom:10px;line-height:1.6;">${title}</div>` : '';
-      html += `<div class="print-meta-row">`;
-      if (author)  html += `<div class="print-meta-item"><span class="print-meta-label">${t2.metaAuthor}</span><span class="print-meta-val">${author}</span></div>`;
-      if (year)    html += `<div class="print-meta-item"><span class="print-meta-label">${t2.metaYear}</span><span class="print-meta-val">${year}</span></div>`;
-      if (field)   html += `<div class="print-meta-item"><span class="print-meta-label">${t2.metaField}</span><span class="print-meta-val">${field}</span></div>`;
-      if (journal) html += `<div class="print-meta-item"><span class="print-meta-label">${t2.metaJournal}</span><span class="print-meta-val">${journal}</span></div>`;
-      html += `</div>`;
-      ptb.innerHTML = html;
-    }
-
-    setHTML('d-problem', problem, t.phProblem);
-
-    const rows = document.querySelectorAll('#q-builder .q-row input');
-    const questions = Array.from(rows).map(i => i.value.trim()).filter(Boolean);
-    const qWrap = document.getElementById('d-questions-wrap');
-    const qList = document.getElementById('d-questions');
-    if (questions.length) {
-      qWrap.style.display = 'block';
-      const nums = currentLang==='ar' ? AR : ['1','2','3','4','5','6','7','8','9','10'];
-      qList.innerHTML = questions.map((q, i) =>
-        `<div class="q-display-item"><div class="q-num">${nums[i]||i+1}</div><div class="q-txt">${q}</div></div>`
-      ).join('');
-    } else {
-      qWrap.style.display = 'none';
-    }
-
-    setHTML('d-summary', summary, t.phSummary);
-    setHTML('d-method',  method,  t.phMethod);
-
-    const toolsWrap = document.getElementById('d-tools-wrap');
-    const toolsEl   = document.getElementById('d-tools');
-    if (tools) {
-      toolsWrap.style.display = 'block';
-      toolsEl.innerHTML = tools.split(/[،,]/).map(t2 => t2.trim()).filter(Boolean)
-        .map(t2 => `<span class="tool-chip">${t2}</span>`).join('');
-    } else {
-      toolsWrap.style.display = 'none';
-    }
-
-    const typeWrap = document.getElementById('d-type-wrap');
-    if (studytype || sample) {
-      let html = '';
-      if (studytype) html += `<span class="type-badge">${studytype}</span>`;
-      if (sample) html += `<p style="margin-top:12px;font-size:14px;color:var(--muted);"><strong style="color:var(--c4)">${t.sampleLabel}</strong>${sample}</p>`;
-      typeWrap.innerHTML = html;
-    } else {
-      typeWrap.innerHTML = `<span class="placeholder">${t.phType}</span>`;
-    }
-
-    setHTML('d-results',    results,    t.phResults);
-    setHTML('d-discussion', discussion, t.phDiscussion);
-
-    const conclWrap = document.getElementById('d-conclusion-wrap');
-    const conclEl   = document.getElementById('d-conclusion');
-    if (conclusion) {
-      conclWrap.style.display = 'block';
-      conclEl.innerHTML = conclusion.replace(/\n/g,'<br>');
-    } else {
-      conclWrap.style.display = 'none';
-    }
-
-    const stepsSection = document.getElementById('steps-section');
-    if (stepsSection) stepsSection.style.display = 'none';
-
-    closeModal();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function savePDF() {
-    // Hide steps if still visible
-    const stepsSection = document.getElementById('steps-section');
-    if (stepsSection) stepsSection.style.display = 'none';
-
-    // Temporarily hide decorative images inside panels
-    const imgs = document.querySelectorAll('.info-panel img, .info-panel .panel-img');
-    imgs.forEach(el => el.style.display = 'none');
-
-    window.print();
-
-    // Restore after print dialog
-    setTimeout(() => {
-      imgs.forEach(el => el.style.display = '');
-    }, 1000);
-  }
-
-  document.getElementById('modal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-  });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-</script>
+  <script src="assets/app.js"></script>
 </body>
 </html>
