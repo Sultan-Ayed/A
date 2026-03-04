@@ -1,114 +1,127 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Paper Reading Protocol | بروتوكول قراءة الأوراق العلمية</title>
-  <meta name="description" content="بروتوكول 10 خطوات لقراءة الأوراق العلمية + قوالب نشر لـ X وLinkedIn + One‑Pager + Graphical Abstract." />
+  <title>بروتوكول قراءة الأوراق العلمية | Paper Reading Protocol</title>
+  <meta name="description" content="صفحة عملية لقراءة الأوراق العلمية في 10 خطوات + قوالب جاهزة للنشر على X وLinkedIn + One‑Pager وGraphical Abstract." />
 
-  <!-- Open Graph (LinkedIn/X) -->
+  <!-- Open Graph / X / LinkedIn -->
   <meta property="og:title" content="بروتوكول قراءة الأوراق العلمية | Paper Reading Protocol" />
-  <meta property="og:description" content="10 خطوات + قوالب جاهزة + مثال تطبيقي. مناسب للباحثين وطلاب الدراسات العليا." />
+  <meta property="og:description" content="10 خطوات + قوالب نشر + One‑Pager + Graphical Abstract (AR/EN)" />
   <meta property="og:type" content="website" />
+  <meta property="og:image" content="./assets/og.png" />
+  <meta property="og:locale" content="ar_SA" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="./assets/og.png" />
 
-  <!-- Fonts (اختياري: سيعمل بدونها) -->
+  <!-- Fonts (Google Fonts) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="assets/styles.css" />
+  <link rel="stylesheet" href="./assets/styles.css" />
 </head>
 
 <body>
-  <a class="skip-link" href="#content">تخطي إلى المحتوى</a>
-
-  <!-- Top bar -->
-  <header class="topbar">
-    <div class="container topbar__row">
-      <div class="brand">
-        <div class="brand__mark" aria-hidden="true">PR</div>
+  <!-- Topbar -->
+  <header class="topbar" id="top">
+    <div class="container topbar__inner">
+      <a class="brand" href="#top" aria-label="Home">
+        <span class="brand__mark" aria-hidden="true">PRP</span>
         <div class="brand__text">
-          <div class="brand__title">Paper Reading Protocol</div>
-          <div class="brand__subtitle">بروتوكول قراءة الأوراق العلمية</div>
+          <div class="brand__title" data-i18n="brand_title">بروتوكول قراءة الأوراق العلمية</div>
+          <div class="brand__sub" data-i18n="brand_sub">10 خطوات + قوالب نشر + One‑Pager</div>
         </div>
-      </div>
+      </a>
 
-      <nav class="nav" aria-label="التنقل الرئيسي">
-        <a href="#protocol">المنهج</a>
-        <a href="#steps">الخطوات</a>
-        <a href="#templates">القوالب</a>
-        <a href="#examples">أمثلة</a>
-        <a href="#about">عن الصفحة</a>
-      </nav>
-
-      <div class="actions">
-        <button class="btn btn--ghost" id="themeToggle" type="button" aria-label="تبديل الوضع الليلي">
-          الوضع
+      <nav class="topbar__actions">
+        <button class="btn btn--ghost" id="btnLang" type="button" aria-label="Toggle language">
+          <span class="kbd">AR/EN</span>
+          <span data-i18n="lang_toggle">تبديل اللغة</span>
         </button>
-        <a class="btn btn--primary" href="#templates">ابدأ بالقوالب</a>
-      </div>
+
+        <button class="btn btn--primary" id="btnOpen" type="button">
+          <span class="dot" aria-hidden="true"></span>
+          <span data-i18n="open_modal">إدخال بيانات ورقة</span>
+        </button>
+      </nav>
     </div>
   </header>
 
   <!-- Hero -->
-  <main id="content">
-    <section class="hero" id="protocol">
-      <div class="container hero__grid">
+  <main>
+    <section class="hero">
+      <div class="container hero__inner">
         <div class="hero__copy">
-          <p class="pill">Academic • Practical • Shareable</p>
-          <h1 class="hero__title">
-            بروتوكول عملي لقراءة الأوراق العلمية
-            <span class="hero__titleEn" dir="ltr"> (10‑Step Protocol)</span>
-          </h1>
-
-          <p class="hero__lead">
-            هدف الصفحة: تساعدك تقرأ الورقة بسرعة <strong>من غير ما تختصرها بشكل مُخلّ</strong>:
-            سؤال البحث → المنهج → النتائج → النقد → التوصيات.
+          <h1 class="hero__title" data-i18n="hero_title">اقرأ أي ورقة علمية بسرعة… وبشكل قابل للنشر</h1>
+          <p class="hero__lead" data-i18n="hero_lead">
+            حوّل قراءتك إلى “مخرجات” جاهزة: سؤال بحث، ملخص مُنظم، منهجية، نتائج، قيود، ثم بوست/ثريد جاهز لـ X وLinkedIn.
           </p>
 
           <div class="hero__cta">
-            <a class="btn btn--primary" href="#steps">ابدأ بالخطوات</a>
-            <button class="btn btn--secondary" type="button" data-copy-target="#xThreadTemplate">
-              انسخ قالب ثريد X
+            <a class="btn btn--dark" href="#steps">
+              <span data-i18n="cta_steps">ابدأ بالخطوات الـ10</span>
+            </a>
+            <button class="btn btn--ghost" id="btnPrint" type="button">
+              <span data-i18n="cta_pdf">طباعة / حفظ PDF</span>
             </button>
           </div>
 
           <div class="hero__meta">
-            <div class="metaCard">
-              <div class="metaCard__k">مناسب لـ</div>
-              <div class="metaCard__v">طلاب دراسات عليا • باحثين • مهتمين بالمنهجية</div>
+            <div class="pill">
+              <span class="pill__k" data-i18n="pill_for">مناسب لـ</span>
+              <span class="pill__v">X • LinkedIn • GitHub Pages</span>
             </div>
-            <div class="metaCard">
-              <div class="metaCard__k">منصات النشر</div>
-              <div class="metaCard__v"><a href="https://x.com/" target="_blank" rel="noreferrer">X</a> • <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a></div>
+            <div class="pill">
+              <span class="pill__k" data-i18n="pill_style">الأسلوب</span>
+              <span class="pill__v" data-i18n="pill_style_v">Structured + Academic‑friendly</span>
             </div>
           </div>
-
-          <p class="hero__note">
-            ملاحظة: المحتوى الأساسي للـ10 خطوات مستلهم من صفحتك الأصلية، لكن اتعاد تنظيمه بصريًا وتحويله لقوالب قابلة للنسخ والاستخدام.
-            <a href="https://sultan-ayed.github.io/A/" target="_blank" rel="noreferrer">المصدر</a>
-          </p>
         </div>
 
-        <aside class="hero__panel" aria-label="ملخص سريع">
+        <aside class="hero__panel" aria-label="Paper Snapshot">
           <div class="panel">
-            <h2 class="panel__title">ملخص سريع</h2>
-            <ul class="checklist">
-              <li>كل خطوة لها: هدف + سؤال + مخرجات</li>
-              <li>قوالب جاهزة للنشر عربي/إنجليزي</li>
-              <li>هيكل One‑Pager رسمي للأكاديميين</li>
-              <li>Graphical Abstract في صورة واحدة</li>
-            </ul>
+            <div class="panel__head">
+              <div class="panel__title" data-i18n="snapshot_title">ملخص الورقة (Snapshot)</div>
+              <div class="panel__hint" data-i18n="snapshot_hint">املأ البيانات من “إدخال بيانات ورقة”</div>
+            </div>
+
+            <div class="meta">
+              <div class="meta__row">
+                <div class="meta__k" data-i18n="m_title">العنوان</div>
+                <div class="meta__v" id="vTitle">—</div>
+              </div>
+              <div class="meta__row">
+                <div class="meta__k" data-i18n="m_venue">الجهة/المؤتمر</div>
+                <div class="meta__v" id="vVenue">—</div>
+              </div>
+              <div class="meta__row">
+                <div class="meta__k" data-i18n="m_year">السنة</div>
+                <div class="meta__v" id="vYear">—</div>
+              </div>
+              <div class="meta__row">
+                <div class="meta__k" data-i18n="m_link">الرابط</div>
+                <div class="meta__v"><a id="vLink" href="#" target="_blank" rel="noreferrer">—</a></div>
+              </div>
+            </div>
 
             <div class="divider"></div>
 
-            <div class="panel__mini">
-              <h3 class="panel__miniTitle">مخرجاتك بعد التطبيق</h3>
-              <ol class="miniSteps">
-                <li>ملاحظات منظمة للورقة</li>
-                <li>ملخص قابل للمشاركة</li>
-                <li>نقد منهجي مختصر</li>
-              </ol>
+            <div class="grid2">
+              <div class="mini">
+                <div class="mini__h" data-i18n="m_rq">سؤال البحث</div>
+                <div class="mini__b" id="vRQ">—</div>
+              </div>
+              <div class="mini">
+                <div class="mini__h" data-i18n="m_takeaway">الخلاصة</div>
+                <div class="mini__b" id="vTakeaway">—</div>
+              </div>
+            </div>
+
+            <div class="panel__foot">
+              <span class="badge" data-i18n="badge_trust">بدون مبالغة • مع قيود</span>
+              <span class="badge badge--accent" data-i18n="badge_ready">جاهز للنشر</span>
             </div>
           </div>
         </aside>
@@ -119,534 +132,262 @@
     <section class="section" id="steps">
       <div class="container">
         <div class="section__head">
-          <div>
-            <h2 class="section__title">الخطوات العشر</h2>
-            <p class="section__subtitle">
-              كل خطوة: (هدف) → (سؤال) → (مخرجات). المحتوى مأخوذ من نسختك النصية الأصلية لكن بشكل قابل للتطبيق. 
-              <a href="https://sultan-ayed.github.io/A/" target="_blank" rel="noreferrer">Source</a>
-            </p>
-          </div>
-
-          <div class="section__tools">
-            <label class="field">
-              <span class="field__label">فلترة سريعة</span>
-              <input id="stepSearch" class="input" type="search" placeholder="ابحث: سؤال البحث، النتائج، المناقشة..." />
-            </label>
-          </div>
-        </div>
-
-        <div class="grid" id="stepsGrid" aria-live="polite">
-          <!-- Step 01 -->
-          <article class="card step" data-tags="مقدمة abstract">
-            <div class="step__top">
-              <div class="step__num">01</div>
-              <h3 class="step__title">
-                ابدأ بالمقدمة لا بالملخص
-                <span class="step__en" dir="ltr">Start with the Introduction</span>
-              </h3>
-            </div>
-            <p class="step__goal"><strong>الهدف:</strong> بناء فهم للسياق قبل التفاصيل.</p>
-            <p class="step__q"><strong>السؤال:</strong> ما المشكلة العامة ولماذا هي مهمة؟</p>
-            <p class="step__out"><strong>المخرجات:</strong> 3 جمل سياق + 1 جملة “لماذا الآن؟”.</p>
-            <details class="step__more">
-              <summary>ملاحظات تطبيقية</summary>
-              <ul>
-                <li>اكتب ما الذي تحاول الورقة تغييره في المجال.</li>
-                <li>حدد “ما قبل الورقة” و“ما بعدها”.</li>
-              </ul>
-            </details>
-          </article>
-
-          <!-- Step 02 -->
-          <article class="card step" data-tags="سؤال research question">
-            <div class="step__top">
-              <div class="step__num">02</div>
-              <h3 class="step__title">
-                حدّد السؤال الرئيسي
-                <span class="step__en" dir="ltr">Define the Main Research Question</span>
-              </h3>
-            </div>
-            <p class="step__goal"><strong>الهدف:</strong> استخراج جوهر الورقة في سطر واحد.</p>
-            <p class="step__q"><strong>السؤال:</strong> ما المشكلة التي يحاول المؤلفون حلها بدقة؟</p>
-            <p class="step__out"><strong>المخرجات:</strong> RQ sentence واحدة (AR/EN).</p>
-          </article>
-
-          <!-- Step 03 -->
-          <article class="card step" data-tags="سياق related work">
-            <div class="step__top">
-              <div class="step__num">03</div>
-              <h3 class="step__title">
-                لخّص السياق في 5 جمل
-                <span class="step__en" dir="ltr">Summarize Context in 5 Sentences</span>
-              </h3>
-            </div>
-            <p class="step__goal"><strong>الهدف:</strong> وضع الورقة داخل خريطة المجال.</p>
-            <p class="step__q"><strong>السؤال:</strong> ما الذي تم سابقًا؟ وما حدوده؟</p>
-            <p class="step__out"><strong>المخرجات:</strong> 5 جمل: (سابق)→(ثغرة)→(اقتراح)→(اختبار)→(نتيجة).</p>
-          </article>
-
-          <!-- Step 04 -->
-          <article class="card step" data-tags="أسئلة hypotheses">
-            <div class="step__top">
-              <div class="step__num">04</div>
-              <h3 class="step__title">
-                استخرج الأسئلة المحددة
-                <span class="step__en" dir="ltr">Extract Specific Questions</span>
-              </h3>
-            </div>
-            <p class="step__goal"><strong>الهدف:</strong> تحويل الورقة لقائمة Claims قابلة للفحص.</p>
-            <p class="step__q"><strong>السؤال:</strong> ما الأسئلة الفرعية/الفرضيات؟</p>
-            <p class="step__out"><strong>المخرجات:</strong> 3–5 أسئلة فرعية.</p>
-          </article>
-
-          <!-- Step 05 -->
-          <article class="card step" data-tags="منهج methodology">
-            <div class="step__top">
-              <div class="step__num">05</div>
-              <h3 class="step__title">
-                حدّد تركيز الورقة
-                <span class="step__en" dir="ltr">Identify the Core Method</span>
-              </h3>
-            </div>
-            <p class="step__goal"><strong>الهدف:</strong> فهم “ما الذي فُعل” لا “ما الذي قيل”.</p>
-            <p class="step__q"><strong>السؤال:</strong> ما المنهج/الأدوات/المتغيرات الأساسية؟</p>
-            <p class="step__out"><strong>المخرجات:</strong> 3 نقاط: Method + Data + Metrics.</p>
-          </article>
-
-          <!-- Step 06 -->
-          <article class="card step" data-tags="نتائج results figures tables">
-            <div class="step__top">
-              <div class="step__num">06</div>
-              <h3 class="step__title">
-                اقرأ النتائج وسجّلها
-                <span class="step__en" dir="ltr">Record Results Before Interpreting</span>
-              </h3>
-            </div>
-            <p class="step__goal"><strong>الهدف:</strong> رصد موضوعي بعيدًا عن التأويل.</p>
-            <p class="step__q"><strong>السؤال:</strong> ماذا تُظهر الأشكال/الجداول حرفيًا؟</p>
-            <p class="step__out"><strong>المخرجات:</strong> فقرة “وصف” لكل تجربة (بدون تفسير).</p>
-          </article>
-
-          <!-- Step 07 -->
-          <article class="card step" data-tags="تحليل interpretation">
-            <div class="step__top">
-              <div class="step__num">07</div>
-              <h3 class="step__title">
-                هل النتائج تجيب على الأسئلة؟
-                <span class="step__en" dir="ltr">Do Results Answer the Questions?</span>
-              </h3>
-            </div>
-            <p class="step__goal"><strong>الهدف:</strong> ربط النتائج مباشرة بـ RQ.</p>
-            <p class="step__q"><strong>السؤال:</strong> أي نتيجة تُجيب عن أي سؤال؟</p>
-            <p class="step__out"><strong>المخرجات:</strong> جدول ربط: (RQ/Sub‑Q) ← (Result figure/table).</p>
-          </article>
-
-          <!-- Step 08 -->
-          <article class="card step" data-tags="مناقشة discussion conclusion">
-            <div class="step__top">
-              <div class="step__num">08</div>
-              <h3 class="step__title">
-                اقرأ المناقشة والخاتمة
-                <span class="step__en" dir="ltr">Read Discussion & Conclusion</span>
-              </h3>
-            </div>
-            <p class="step__goal"><strong>الهدف:</strong> فهم تفسير المؤلفين ونقاط القوة/الضعف.</p>
-            <p class="step__q"><strong>السؤال:</strong> هل يوجد تفسير بديل لم يُذكر؟</p>
-            <p class="step__out"><strong>المخرجات:</strong> 2 نقاط: “يدّعون” + “يدعمونها بـ”.</p>
-          </article>
-
-          <!-- Step 09 -->
-          <article class="card step" data-tags="تحقق abstract">
-            <div class="step__top">
-              <div class="step__num">09</div>
-              <h3 class="step__title">
-                عد إلى الملخص الآن
-                <span class="step__en" dir="ltr">Return to the Abstract</span>
-              </h3>
-            </div>
-            <p class="step__goal"><strong>الهدف:</strong> التحقق من توافق الملخص مع ما قرأته.</p>
-            <p class="step__q"><strong>السؤال:</strong> هل الملخص عادل ودقيق؟</p>
-            <p class="step__out"><strong>المخرجات:</strong> سطر “ما الذي بالغ فيه الملخص؟”.</p>
-          </article>
-
-          <!-- Step 10 -->
-          <article class="card step" data-tags="سياق broader context">
-            <div class="step__top">
-              <div class="step__num">10</div>
-              <h3 class="step__title">
-                السياق الأوسع
-                <span class="step__en" dir="ltr">Place It in the Broader Literature</span>
-              </h3>
-            </div>
-            <p class="step__goal"><strong>الهدف:</strong> ربط الورقة بالعمل العلمي الأوسع.</p>
-            <p class="step__q"><strong>السؤال:</strong> ماذا يقول الآخرون؟ وما الخطوة التالية؟</p>
-            <p class="step__out"><strong>المخرجات:</strong> 3 مراجع مرتبطة + فكرة بحثية واحدة.</p>
-          </article>
-        </div>
-
-        <div class="callout">
-          <h3 class="callout__title">مبدأ ثابت</h3>
-          <p class="callout__text">
-            لا تُحوّل الورقة إلى “قصة” قبل ما تُحوّلها إلى “Claims + Evidence”.
-            بعد كده بس اكتب ملخصك للنشر.
+          <h2 class="section__title" data-i18n="steps_title">الخطوات الـ10 (Protocol)</h2>
+          <p class="section__sub" data-i18n="steps_sub">
+            كل خطوة = هدف + سؤال واحد + مخرج واضح. (مستوحاة من صفحتك الأصلية) 
+          </p>
+          <p class="section__sub section__sub--link">
+            <a href="https://sultan-ayed.github.io/A/" target="_blank" rel="noreferrer">المصدر / النسخة الأصلية</a>
+            <span class="sep">•</span>
+            <a href="https://procomm.ieee.org/transactions-of-professional-communication/for-prospective-authors/guidelines-to-follow/preparing-structured-abstracts/" target="_blank" rel="noreferrer">
+              IEEE Structured Abstracts
+            </a>
           </p>
         </div>
-      </div>
-    </section>
 
-    <!-- Templates -->
-    <section class="section section--alt" id="templates">
-      <div class="container">
-        <div class="section__head">
-          <div>
-            <h2 class="section__title">قوالب جاهزة (Copy / Paste)</h2>
-            <p class="section__subtitle">
-              هنا هتلاقي قوالب للنشر على <a href="https://x.com/" target="_blank" rel="noreferrer">X</a> و<a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a>،
-              بالإضافة إلى قالب One‑Pager وقالب Graphical Abstract.
-            </p>
-          </div>
-        </div>
-
-        <div class="tabs" role="tablist" aria-label="قوالب">
-          <button class="tab is-active" role="tab" aria-selected="true" aria-controls="tab-x" id="tabBtn-x">X Thread</button>
-          <button class="tab" role="tab" aria-selected="false" aria-controls="tab-li" id="tabBtn-li">LinkedIn Post</button>
-          <button class="tab" role="tab" aria-selected="false" aria-controls="tab-one" id="tabBtn-one">One‑Pager</button>
-          <button class="tab" role="tab" aria-selected="false" aria-controls="tab-ga" id="tabBtn-ga">Graphical Abstract</button>
-        </div>
-
-        <!-- Tab: X -->
-        <div class="tabPanel is-active" role="tabpanel" id="tab-x" aria-labelledby="tabBtn-x">
-          <div class="templateBox">
-            <div class="templateBox__head">
-              <h3 class="templateBox__title">قالب ثريد X (عربي/إنجليزي)</h3>
-              <div class="templateBox__actions">
-                <button class="btn btn--secondary" type="button" data-copy-target="#xThreadTemplate">نسخ</button>
-              </div>
-            </div>
-
-            <textarea id="xThreadTemplate" class="textarea" rows="12" spellcheck="false">
-T1) AR: عنوان الورقة + لماذا تهم؟
-    EN: Paper title + why it matters.
-
-T2) Problem:
-    AR: المشكلة في سطرين.
-    EN: 1–2 lines.
-
-T3) Research Question (RQ):
-    AR/EN: جملة واحدة.
-
-T4) Method:
-    AR: ما الذي فعله المؤلفون؟ (3 نقاط)
-    EN: 3 bullets.
-
-T5) Setup:
-    Dataset(s) + Baselines + Hardware/Edge (إن وجد).
-
-T6) Metrics:
-    2–3 metrics (AUC/F1/FPS/Latency/Privacy score…).
-
-T7) Results:
-    2–3 numbers + مقارنة baseline.
-
-T8) Limitations:
-    نقطتين بوضوح.
-
-T9) Takeaway:
-    جملة واحدة قابلة للاقتباس.
-
-T10) Link + سؤال للنقاش:
-     رابط الورقة + سؤال مفتوح.
-            </textarea>
-
-            <p class="fineprint">
-              نصيحة: أي ثريد بدون “Results بالأرقام” غالبًا ينتشر أقل داخل الأكاديميا.
-            </p>
-          </div>
-        </div>
-
-        <!-- Tab: LinkedIn -->
-        <div class="tabPanel" role="tabpanel" id="tab-li" aria-labelledby="tabBtn-li" hidden>
-          <div class="templateBox">
-            <div class="templateBox__head">
-              <h3 class="templateBox__title">قالب LinkedIn (نص + مرفق PDF)</h3>
-              <div class="templateBox__actions">
-                <button class="btn btn--secondary" type="button" data-copy-target="#liTemplate">نسخ</button>
-              </div>
-            </div>
-
-            <textarea id="liTemplate" class="textarea" rows="10" spellcheck="false">
-[Hook]
-AR: في ورقة جديدة، المشكلة هي (…)، والهدف (…).
-EN: A new paper tackles (…), aiming to (…).
-
-[What they did]
-Method in 2–3 bullets.
-
-[What they found]
-2–3 key results (numbers) + مقارنة قصيرة.
-
-[Limitations]
-نقطتين.
-
-[Takeaway]
-جملة واحدة.
-
-Link: (ضع رابط الورقة)
-Hashtags: #Research #MachineLearning #ComputerVision
-            </textarea>
-
-            <p class="fineprint">
-              الأفضل ترفق One‑Pager (صفحة واحدة) كـ PDF — ده يرفع الحفظ والمشاركة.
-            </p>
-          </div>
-        </div>
-
-        <!-- Tab: One-pager -->
-        <div class="tabPanel" role="tabpanel" id="tab-one" aria-labelledby="tabBtn-one" hidden>
-          <div class="twoCol">
-            <div class="templateBox">
-              <div class="templateBox__head">
-                <h3 class="templateBox__title">هيكل One‑Pager (صفحة واحدة)</h3>
-                <div class="templateBox__actions">
-                  <button class="btn btn--secondary" type="button" data-copy-target="#onePagerTemplate">نسخ</button>
-                </div>
-              </div>
-
-              <textarea id="onePagerTemplate" class="textarea" rows="14" spellcheck="false">
-Header:
-- Title (EN) + Title (AR short)
-- Venue/Year + Authors + DOI/URL
-
-Left column:
-- Problem (1 sentence)
-- RQ (1 sentence)
-- Method (3 bullets max)
-- Setup: dataset(s) + baselines + hardware (2 bullets)
-
-Right column:
-- Metrics (2–3 items)
-- Key results (2–3 numbers)
-- Limitations (2 bullets)
-- Takeaway (1 sentence)
-              </textarea>
-
-              <p class="fineprint">
-                قالب One‑Pager كـ “وثيقة” بيتداول بسهولة بين الباحثين.
-              </p>
-            </div>
-
-            <div class="templateBox">
-              <div class="templateBox__head">
-                <h3 class="templateBox__title">خانات تعبئة سريعة</h3>
-              </div>
-
-              <div class="fillGrid">
-                <div class="fillItem">
-                  <div class="fillItem__k">Citation</div>
-                  <div class="fillItem__v"><span dir="ltr">Venue, Year, Authors, DOI</span></div>
-                </div>
-                <div class="fillItem">
-                  <div class="fillItem__k">Problem</div>
-                  <div class="fillItem__v">سطر واحد</div>
-                </div>
-                <div class="fillItem">
-                  <div class="fillItem__k">RQ</div>
-                  <div class="fillItem__v">سطر واحد</div>
-                </div>
-                <div class="fillItem">
-                  <div class="fillItem__k">Method</div>
-                  <div class="fillItem__v">3 نقاط</div>
-                </div>
-                <div class="fillItem">
-                  <div class="fillItem__k">Results</div>
-                  <div class="fillItem__v">2–3 أرقام</div>
-                </div>
-                <div class="fillItem">
-                  <div class="fillItem__k">Limitations</div>
-                  <div class="fillItem__v">نقطتين</div>
-                </div>
-              </div>
-
-              <div class="noteBox">
-                لو تحب تضيف ملفات تنزيل فعلية (PDF/Docx)، حطّها داخل مجلد <code>/downloads</code> وحدث روابط الأزرار.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tab: Graphical Abstract -->
-        <div class="tabPanel" role="tabpanel" id="tab-ga" aria-labelledby="tabBtn-ga" hidden>
-          <div class="templateBox">
-            <div class="templateBox__head">
-              <h3 class="templateBox__title">Graphical Abstract (قالب صورة واحدة)</h3>
-              <div class="templateBox__actions">
-                <button class="btn btn--secondary" type="button" data-copy-target="#gaTemplate">نسخ</button>
-              </div>
-            </div>
-
-            <textarea id="gaTemplate" class="textarea" rows="12" spellcheck="false">
-[Left] Input:
-- Data/Scenario (e.g., surveillance crowd video)
-
-[Center] Method:
-- Key idea (2–3 short phrases)
-- One visual pipeline arrow
-
-[Right] Output:
-- What improves? (privacy, accuracy, speed…)
-- One key number (best)
-- Constraint (small text): “within setup …”
-
-Rule:
-- Stand‑alone, minimal text, one key message.
-            </textarea>
-
-            <p class="fineprint">
-              الهدف: صورة “تتفهم في 5 ثواني” وتكون مستقلة بذاتها.
-            </p>
-          </div>
+        <div class="cards" id="stepsGrid">
+          <!-- injected by JS -->
         </div>
       </div>
     </section>
 
-    <!-- Examples -->
-    <section class="section" id="examples">
+    <!-- Outputs -->
+    <section class="section" id="outputs">
       <div class="container">
         <div class="section__head">
-          <div>
-            <h2 class="section__title">أمثلة تطبيقية</h2>
-            <p class="section__subtitle">
-              مثال سريع على تلخيص ورقة باسم <a href="https://www.ieee.org/" target="_blank" rel="noreferrer">IEEE</a> باستخدام الهيكل.  
-              الورقة: <a href="https://gensparkstorageprodwest.blob.core.windows.net/personal/e1203786-bc54-4f45-9c13-f12c5ba61e62/upload/default/fc907da0-8282-4cc8-85aa-72f62ffbe9b2?se=2026-03-04T05%3A34%3A21Z&sp=r&sv=2025-05-05&sr=b&rsct=application/pdf&sig=LzLZ61ZGkeNlmyytOfAPMD/bK3myiqNdzx5dMmK25pg%3D" target="_blank" rel="noreferrer">LA3D (PDF)</a>
-              [Source]
-            </p>
-          </div>
+          <h2 class="section__title" data-i18n="outputs_title">مخرجات جاهزة للنشر</h2>
+          <p class="section__sub" data-i18n="outputs_sub">
+            انسخ والصق فورًا: ثريد X، بوست LinkedIn، قالب One‑Pager، وقالب Graphical Abstract.
+          </p>
+          <p class="section__sub section__sub--link">
+            <a href="https://www.cscce.org/one-pager-style-guide/" target="_blank" rel="noreferrer">One‑pager style guide</a>
+            <span class="sep">•</span>
+            <a href="https://www.elsevier.com/researcher/author/tools-and-resources/graphical-abstract" target="_blank" rel="noreferrer">Elsevier Graphical Abstract</a>
+          </p>
         </div>
 
-        <div class="exampleGrid">
-          <article class="card example">
-            <h3 class="example__title">
-              <a href="https://gensparkstorageprodwest.blob.core.windows.net/personal/e1203786-bc54-4f45-9c13-f12c5ba61e62/upload/default/fc907da0-8282-4cc8-85aa-72f62ffbe9b2?se=2026-03-04T05%3A34%3A21Z&sp=r&sv=2025-05-05&sr=b&rsct=application/pdf&sig=LzLZ61ZGkeNlmyytOfAPMD/bK3myiqNdzx5dMmK25pg%3D" target="_blank" rel="noreferrer">LA3D</a> — ملخص منظم
-            </h3>
+        <div class="tabs" role="tablist" aria-label="Outputs Tabs">
+          <button class="tab is-active" role="tab" aria-selected="true" data-tab="x">X Thread</button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="li">LinkedIn Post</button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="one">One‑Pager</button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="ga">Graphical Abstract</button>
+        </div>
 
-            <div class="kv">
-              <div class="kv__k">Problem</div>
-              <div class="kv__v">
-                صعوبة تشغيل إخفاء الهوية بالزمن الحقيقي على أجهزة الحافة بسبب الكلفة الحوسبية ومخاوف الخصوصية. 
+        <div class="tabpanes">
+          <article class="pane is-active" id="pane-x" role="tabpanel">
+            <div class="pane__head">
+              <h3 class="pane__title">X Thread (8 tweets)</h3>
+              <div class="pane__actions">
+                <button class="btn btn--small btn--ghost" data-copy="#xText" type="button" data-i18n="copy">نسخ</button>
               </div>
             </div>
+            <textarea id="xText" class="textarea" rows="12" spellcheck="false"></textarea>
+            <p class="hint" data-i18n="x_hint">نصيحة: خلي كل تغريدة ≤ 240 حرف، وحط الرابط في آخر ثريد.</p>
+          </article>
 
-            <div class="kv">
-              <div class="kv__k">RQ</div>
-              <div class="kv__v">
-                كيف نحمي خصوصية الأفراد في فيديوهات المراقبة مع الحفاظ على كفاءة كشف الشذوذ دون التأثير على سرعة الاستجابة؟
+          <article class="pane" id="pane-li" role="tabpanel">
+            <div class="pane__head">
+              <h3 class="pane__title">LinkedIn Post</h3>
+              <div class="pane__actions">
+                <button class="btn btn--small btn--ghost" data-copy="#liText" type="button" data-i18n="copy">نسخ</button>
               </div>
             </div>
+            <textarea id="liText" class="textarea" rows="10" spellcheck="false"></textarea>
+            <p class="hint" data-i18n="li_hint">ارفع One‑Pager كـ PDF مع البوست لرفع المصداقية.</p>
+          </article>
 
-            <div class="kv">
-              <div class="kv__k">Method</div>
-              <div class="kv__v">
-                <ul>
-                  <li><span dir="ltr">LA3D</span>: نهج خفيف وتكيفي.</li>
-                  <li>Dynamic Adjustment لتقليل الهدر في موارد الحوسبة.</li>
-                  <li>حماية كاملة للجسم مع الحفاظ على جودة البيانات اللازمة لـ <span dir="ltr">VAD</span>.</li>
-                </ul>
+          <article class="pane" id="pane-one" role="tabpanel">
+            <div class="pane__head">
+              <h3 class="pane__title">One‑Pager (Structured)</h3>
+              <div class="pane__actions">
+                <button class="btn btn--small btn--ghost" data-copy="#onePager" type="button" data-i18n="copy">نسخ</button>
               </div>
             </div>
-
-            <div class="kv">
-              <div class="kv__k">Evaluation</div>
-              <div class="kv__v">
-                تم التقييم باستخدام مجموعات بيانات عامة ومقارنة بطرق تقليدية وطرق تعلم عميق (حسب الملخص المتاح).
-              </div>
-            </div>
-
-            <div class="kv">
-              <div class="kv__k">Results</div>
-              <div class="kv__v">
-                النص المتاح لا يحتوي أرقام نتائج محددة؛ ضع هنا 2–3 أرقام عند توفر الورقة الكاملة (مثل <span dir="ltr">F1/AUC/FPS/Latency</span>).
-              </div>
-            </div>
-
-            <div class="kv">
-              <div class="kv__k">Takeaway</div>
-              <div class="kv__v">
-                النهج التكيفي الخفيف مناسب لأنظمة المراقبة الذكية خصوصًا حين تكون المعالجة الفورية على الحافة ضرورية.
-              </div>
-            </div>
-
-            <p class="fineprint">
-              المصدر: ملخص LA3D المتاح في الملف. 
-              <a href="https://gensparkstorageprodwest.blob.core.windows.net/personal/e1203786-bc54-4f45-9c13-f12c5ba61e62/upload/default/fc907da0-8282-4cc8-85aa-72f62ffbe9b2?se=2026-03-04T05%3A34%3A21Z&sp=r&sv=2025-05-05&sr=b&rsct=application/pdf&sig=LzLZ61ZGkeNlmyytOfAPMD/bK3myiqNdzx5dMmK25pg%3D" target="_blank" rel="noreferrer">Source</a>
+            <textarea id="onePager" class="textarea" rows="14" spellcheck="false"></textarea>
+            <p class="hint">
+              <a href="https://procomm.ieee.org/transactions-of-professional-communication/for-prospective-authors/guidelines-to-follow/preparing-structured-abstracts/" target="_blank" rel="noreferrer">
+                Structured Abstract guidance (IEEE)
+              </a>
             </p>
           </article>
 
-          <aside class="card note">
-            <h3 class="note__title">كيف تخلي المثال “ينتشر” أكاديميًا؟</h3>
-            <ol class="note__list">
-              <li>أضف أرقام (حتى رقمين) في قسم النتائج.</li>
-              <li>اذكر اسم الـdataset/الـbaseline إن وُجد.</li>
-              <li>أضف قيود (Limitations) نقطتين.</li>
-            </ol>
-            <div class="divider"></div>
-            <p class="note__text">
-              لو عندك الورقة الكاملة/DOI، ابعتهم وأنا أطلع لك نسخة One‑Pager “معبّأة بالأرقام” بنفس الهيكل.
+          <article class="pane" id="pane-ga" role="tabpanel">
+            <div class="pane__head">
+              <h3 class="pane__title">Graphical Abstract (3 blocks)</h3>
+              <div class="pane__actions">
+                <button class="btn btn--small btn--ghost" data-copy="#gaText" type="button" data-i18n="copy">نسخ</button>
+              </div>
+            </div>
+            <textarea id="gaText" class="textarea" rows="10" spellcheck="false"></textarea>
+            <p class="hint">
+              <a href="https://www.elsevier.com/researcher/author/tools-and-resources/graphical-abstract" target="_blank" rel="noreferrer">
+                Elsevier graphical abstract rules
+              </a>
             </p>
-          </aside>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- About -->
-    <section class="section section--alt" id="about">
+    <!-- Example -->
+    <section class="section" id="example">
       <div class="container">
         <div class="section__head">
-          <div>
-            <h2 class="section__title">عن الصفحة</h2>
-            <p class="section__subtitle">
-              الصفحة دي معمولة لتكون “مرجع تشغيل” مش مجرد مقال: خطوات + قوالب + مثال.
-              المحتوى الأساسي للخطوات مأخوذ من صفحتك الأصلية [Source](https://sultan-ayed.github.io/A/).
-            </p>
+          <h2 class="section__title" data-i18n="example_title">مثال (Example)</h2>
+          <p class="section__sub" data-i18n="example_sub">مثال تعبئة سريع عشان تشوف الشكل النهائي.</p>
+        </div>
+
+        <div class="example">
+          <div class="example__card">
+            <div class="example__title">Low‑Latency Video Anonymization for Crowd Anomaly Detection</div>
+            <div class="example__meta">LA3D • Edge • Low latency • Privacy vs Utility</div>
+            <div class="example__actions">
+              <a class="btn btn--small btn--dark" href="https://gensparkstorageprodwest.blob.core.windows.net/personal/e1203786-bc54-4f45-9c13-f12c5ba61e62/upload/default/fc907da0-8282-4cc8-85aa-72f62ffbe9b2?se=2026-03-04T05%3A33%3A39Z&sp=r&sv=2025-05-05&sr=b&rsct=application/pdf&sig=S/Elq1idLmny3w3J66eGdJt3eFpRA8%2BEmezy2ml2NW8%3D"
+                 target="_blank" rel="noreferrer">PDF</a>
+              <button class="btn btn--small btn--ghost" id="btnFillExample" type="button" data-i18n="fill_example">تعبئة المثال</button>
+            </div>
+          </div>
+
+          <div class="example__note">
+            <div class="note">
+              <div class="note__h" data-i18n="example_note_h">ملحوظة</div>
+              <div class="note__b" data-i18n="example_note_b">
+                لو عندك الورقة الكاملة/DOI أو لقطة من النتائج بالأرقام، هتطلع القوالب أقوى بكتير.
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="aboutGrid">
-          <div class="card">
-            <h3>ترخيص</h3>
-            <p>
-              يمكنك وضع ترخيص مفتوح (مثلاً MIT أو CC BY) حسب رغبتك.
-            </p>
-          </div>
-
-          <div class="card">
-            <h3>مساهمة</h3>
-            <p>
-              لو تبغى تضيف صفحة ثانية للأمثلة أو صفحة Download للقوالب، نفس الهوية دي هتخليك توسّع الموقع بسهولة.
-            </p>
-          </div>
-
-          <div class="card">
-            <h3>روابط</h3>
-            <ul>
-              <li><a href="https://pages.github.com/" target="_blank" rel="noreferrer">GitHub Pages</a></li>
-              <li><a href="https://x.com/" target="_blank" rel="noreferrer">X</a></li>
-              <li><a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a></li>
-            </ul>
-          </div>
+        <div class="refs">
+          <h3 class="refs__title" data-i18n="refs_title">مراجع تصميم/منهجية</h3>
+          <ul class="refs__list">
+            <li>
+              Structured abstracts (IEEE):
+              <a href="https://procomm.ieee.org/transactions-of-professional-communication/for-prospective-authors/guidelines-to-follow/preparing-structured-abstracts/" target="_blank" rel="noreferrer">
+                https://procomm.ieee.org/.../preparing-structured-abstracts/
+              </a>
+            </li>
+            <li>
+              One‑pager style guide:
+              <a href="https://www.cscce.org/one-pager-style-guide/" target="_blank" rel="noreferrer">https://www.cscce.org/one-pager-style-guide/</a>
+            </li>
+            <li>
+              Graphical abstracts (Elsevier):
+              <a href="https://www.elsevier.com/researcher/author/tools-and-resources/graphical-abstract" target="_blank" rel="noreferrer">
+                https://www.elsevier.com/.../graphical-abstract
+              </a>
+            </li>
+          </ul>
         </div>
-
-        <footer class="footer">
-          <p>
-            Built for academic clarity.  
-            Original steps source: <a href="https://sultan-ayed.github.io/A/" target="_blank" rel="noreferrer">sultan-ayed.github.io/A</a>
-          </p>
-        </footer>
       </div>
     </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer__inner">
+        <div class="footer__left">
+          <div class="footer__title" data-i18n="footer_title">استخدمه كسلسلة محتوى</div>
+          <div class="footer__sub" data-i18n="footer_sub">
+            غلاف ثابت + 10 خطوات + مخرجات نشر = هوية محتوى قابلة للتكرار.
+          </div>
+        </div>
+
+        <div class="footer__right">
+          <a class="link" href="https://x.com/" target="_blank" rel="noreferrer">X</a>
+          <span class="sep">•</span>
+          <a class="link" href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a>
+          <span class="sep">•</span>
+          <a class="link" href="https://pages.github.com/" target="_blank" rel="noreferrer">GitHub Pages</a>
+        </div>
+      </div>
+    </footer>
   </main>
 
-  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+  <!-- Floating action -->
+  <button class="fab" id="fab" type="button" aria-label="Open paper data modal">
+    <span class="fab__plus" aria-hidden="true">+</span>
+  </button>
 
-  <script src="assets/app.js"></script>
+  <!-- Modal -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal__overlay" data-close="1"></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-label="Paper Data Entry">
+      <div class="modal__head">
+        <div class="modal__title" data-i18n="modal_title">إدخال بيانات الورقة</div>
+        <button class="iconbtn" data-close="1" aria-label="Close">×</button>
+      </div>
+
+      <div class="modal__body">
+        <div class="form">
+          <div class="field">
+            <label data-i18n="f_title">عنوان الورقة</label>
+            <input id="fTitle" type="text" placeholder="e.g., Low-Latency Video Anonymization..." />
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label data-i18n="f_venue">المؤتمر/المجلة</label>
+              <input id="fVenue" type="text" placeholder="e.g., IEEE / CVPR / Journal ..." />
+            </div>
+            <div class="field">
+              <label data-i18n="f_year">السنة</label>
+              <input id="fYear" type="text" inputmode="numeric" placeholder="2026" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label data-i18n="f_link">رابط الورقة / DOI</label>
+            <input id="fLink" type="url" placeholder="https://..." />
+          </div>
+
+          <div class="field">
+            <label data-i18n="f_problem">المشكلة (Problem) — سطرين</label>
+            <textarea id="fProblem" rows="2" placeholder="What problem does the paper address?"></textarea>
+          </div>
+
+          <div class="field">
+            <label data-i18n="f_rq">سؤال البحث (Research Question)</label>
+            <textarea id="fRQ" rows="2" placeholder="How can we ... while ... ?"></textarea>
+          </div>
+
+          <div class="field">
+            <label data-i18n="f_method">المنهج/الفكرة (Method) — 3 نقاط</label>
+            <textarea id="fMethod" rows="3" placeholder="• ...&#10;• ...&#10;• ..."></textarea>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label data-i18n="f_metrics">المقاييس (Metrics)</label>
+              <textarea id="fMetrics" rows="2" placeholder="Latency, FPS, AUC, F1..."></textarea>
+            </div>
+            <div class="field">
+              <label data-i18n="f_results">النتائج (Results) — أرقام/مقارنات</label>
+              <textarea id="fResults" rows="2" placeholder="Key numbers and comparisons..."></textarea>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label data-i18n="f_limits">القيود (Limitations) — نقطتين</label>
+              <textarea id="fLimits" rows="2" placeholder="Where does it fail / not generalize?"></textarea>
+            </div>
+            <div class="field">
+              <label data-i18n="f_takeaway">خلاصة عملية (Takeaway) — جملة</label>
+              <textarea id="fTakeaway" rows="2" placeholder="If you care about X, use Y because..." ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal__foot">
+        <button class="btn btn--ghost" data-close="1" type="button" data-i18n="cancel">إلغاء</button>
+        <button class="btn btn--dark" id="btnApply" type="button" data-i18n="apply">تطبيق على الصفحة</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="./assets/app.js"></script>
 </body>
 </html>
